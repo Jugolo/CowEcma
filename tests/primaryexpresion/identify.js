@@ -1,0 +1,12 @@
+identifys = true;
+asset(identifys, true, "Fail to set identifys: ");
+hasdjhjasd = false;
+asset(hasdjhjasd, false, "Fail to set hasdjhjasd: ");
+asdjksajd = null;
+asset(asdjksajd, null, "Fail to set asdjksajd");
+$sadjksajdka = "hejas";
+asset($sadjksajdka, "hejas", "Fail to set $sadjksajdka: ");
+$92912j218u21he1b2h1b2hebh12hb = 12182;
+asset($92912j218u21he1b2h1b2hebh12hb, 12182, "Fail to set $92912j218u21he1b2h1b2hebh12hb: ");
+_sjakdjasdhjsadhjashdjasfnjzxncs = 21812.123213;
+asset(_sjakdjasdhjsadhjashdjasfnjzxncs, 21812.123213, "Fail to set _sjakdjasdhjsadhjashdjasfnjzxncs: ");
