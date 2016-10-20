@@ -26,20 +26,20 @@ class RelationalExpresion implements BaseExpresion{
     if(!($o->isString() && $t->isString())){
       $o = $o->ToNumber();
       $t = $t->ToNumber();
-      if(is_nan($o->value) || is_nan($t->value)){
+      if(is_nan($o) || is_nan($t)){
         return new Value("Undefined", null);
       }
 
-      if($o->value == $t->value)
+      if($o == $t)
        return new Value("Boolean", ($this->arg == "<=" || $this->arg == ">="));
 
-      if($o->value == +0 && $t->value == -0 || $o->value == -0 && $o->value == +0)
+      if($o == +0 && $t == -0 || $o == -0 && $o == +0)
         return new Value("Boolean", false);
 
-      if($o->value == +INF || $o->value == -INF || $t->value == +INF || $t->value == -INF)
+      if($o == +INF || $o == -INF || $t == +INF || $t == -INF)
         return new Value("Boolean", false);
 
-      if($o->value < $t->value){
+      if($o < $t){
         return new Value("Boolean", ($this->arg == "<" || $this->arg == "<="));
       }else{
         return new Value("Boolean", ($this->arg == ">" || $this->arg == ">="));
