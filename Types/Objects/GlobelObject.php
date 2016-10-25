@@ -10,13 +10,10 @@ use BuiltInFunction\BuiltInFunction;
 use Types\Value\Value;
 
 class GlobelObject extends HeadObject{
-  public function __construct(){
+  public function __construct(\Ecma\Ecma $ecma){
     //append prototype to this object
     $this->prototype = new HeadObject();
-    $this->Put("Object", new Property(new Value("Object", new Objects())));
-    $this->Put("Function", new Property(new Value("Object", new FunctionConstructor())));
-    /*echo "<pre>";
-    print_r($this->propertys);
-    exit("</pre>");*/
+    $this->Put("Object", new Property(new Value("Object", ($ecma->object = new Objects($ecma)))));
+    $this->Put("Function", new Property(new Value("Object", new FunctionConstructor($ecma))));
   }
 }

@@ -2,6 +2,7 @@
 namespace Expresion\BitwiseExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class BitwiseExpresion implements BaseExpresion{
   private $arg;
@@ -14,7 +15,11 @@ class BitwiseExpresion implements BaseExpresion{
     $this->arg2 = $arg2;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    return \Math\Math::math($ecma->GetValue($this->arg1->parse($ecma)), $this->arg, $ecma->GetValue($this->arg2->parse($ecma)));
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    $left = $this->arg1->parse($ecma)->GetValue();
+    $right = $this->arg2->parse($ecma)->GetValue();
+    if($this->arg == "+" && ($left->isString() || $right->isString()))
+      return new ExpresionResult(new \Types\Value\Value("String", $left->ToString().$right->ToString()));
+    return new ExpresionResult(\Math\Math::math($left, $this->arg, $right));
   }
 }

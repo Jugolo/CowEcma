@@ -31,7 +31,7 @@ class Value{
     $this->value = $value;
   }
 
-  public function ToPrimetiv($input, $preferredtype = null){
+  public function ToPrimetiv($input = "Number", $preferredtype = null){
     if($this->isObject()){
       return $this->value->DefaultValue($preferredtype);
     }
@@ -88,7 +88,7 @@ class Value{
     if($this->isBoolean())
       return $this->value ? "true" : "false";
     if($this->isNumber())
-      return $this->numberToString($this->value);
+      return $this->numberToString();
     if($this->isString())
       return $this->value;
     if($this->isObject())
@@ -103,6 +103,21 @@ class Value{
   public function ToObject(){
     if($this->isObject())
       return $this->value;
+    if($this->isUndefined())
+      throw new \RuntimeException("Cant convert Undefined to object");
     exit("Make Value->ToObject('".$this->type."')!!");
+  }
+
+  private function numberToString() : string{
+    if(is_nan($this->value))
+     return "NaN";
+
+    if($this->value === +0)
+      return "0";
+
+    if(is_infinite($this->value))
+      return "Infinity";
+
+    return strval($this->value);
   }
 }

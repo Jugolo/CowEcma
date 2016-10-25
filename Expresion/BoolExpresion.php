@@ -1,6 +1,8 @@
 <?php
 namespace Expresion\BoolExpresion;
 
+use Expresion\ExpresionResult\ExpresionResult;
+
 class BoolExpresion implements \Expresion\BaseExpresion\BaseExpresion{
   private $bool;
 
@@ -8,7 +10,7 @@ class BoolExpresion implements \Expresion\BaseExpresion\BaseExpresion{
     $this->bool = $b == "true";
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    return new \Types\Value\Value("Boolean", $this->bool);
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    return new ExpresionResult(new \Types\Value\Value("Boolean", $this->bool));
   }
 }

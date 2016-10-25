@@ -2,6 +2,7 @@
 namespace Expresion\RelationalExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 use Types\Value\Value;
 
 class RelationalExpresion implements BaseExpresion{
@@ -15,8 +16,8 @@ class RelationalExpresion implements BaseExpresion{
     $this->arg2 = $arg2;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-      return $this->Arrow($ecma->GetValue($this->arg1->parse($ecma)), $ecma->GetValue($this->arg2->parse($ecma)));
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+      return new ExpresionResult($this->Arrow($this->arg1->parse($ecma)->GetValue(), $this->arg2->parse($ecma)->GetValue()));
   }
 
   private function Arrow(Value $one, Value $two) : Value{

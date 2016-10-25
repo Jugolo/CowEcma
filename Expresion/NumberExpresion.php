@@ -1,6 +1,8 @@
 <?php
 namespace Expresion\NumberExpresion;
 
+use Expresion\ExpresionResult\ExpresionResult;
+
 class NumberExpresion implements \Expresion\BaseExpresion\BaseExpresion{
   private $value;
 
@@ -8,7 +10,7 @@ class NumberExpresion implements \Expresion\BaseExpresion\BaseExpresion{
     $this->value = intval($number);
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    return new \Types\Value\Value("Number", $this->value);
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    return new ExpresionResult(new \Types\Value\Value("Number", (int)$this->value));
   }
 }

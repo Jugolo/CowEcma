@@ -1,6 +1,8 @@
 <?php
 namespace Expresion\StringExpresion;
 
+use Expresion\ExpresionResult\ExpresionResult;
+
 class StringExpresion implements \Expresion\BaseExpresion\BaseExpresion{
   private $str;
 
@@ -8,7 +10,7 @@ class StringExpresion implements \Expresion\BaseExpresion\BaseExpresion{
     $this->str = $str;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    return new \Types\Value\Value("String", $this->str);
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    return new ExpresionResult(new \Types\Value\Value("String", $this->str));
   }
 }

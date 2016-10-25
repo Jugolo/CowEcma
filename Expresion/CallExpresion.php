@@ -2,6 +2,7 @@
 namespace Expresion\CallExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class CallExpresion implements BaseExpresion{
   private $func;
@@ -12,23 +13,27 @@ class CallExpresion implements BaseExpresion{
     $this->args = $arguments;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    $func = $ecma->GetValue($this->func->parse($ecma));
-    if(!$func->isObject())
-      throw new \RuntimeException("Try to use a non object to function call");
-
-    if(!($func->value instanceof \Types\Objects\Call\Call)){
-      throw new \RuntimeException("Object don't contain Call");
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    $base = $this->func->parse($ecma);
+    $arg = [];
+    for($i=0;$i<count($this->args);$i++)
+      $arg[] = $this->args[$i]->parse($ecma)->GetValue();
+    $value = $base->GetValue();
+    if(!$value->isObject())
+      throw new \RuntimeException("Cant not call a non function");
+    $value = $value->ToObject();
+    if(!($value instanceof \Types\Objects\Call\Call)){
+      throw new \RuntimeException("The object don't implements Call");
     }
 
-    $args = [];
-    for($i=0;$i<count($this->args);$i++){
-      $args[] = $ecma->GetValue($this->args[$i]->parse($ecma));
-    }
-
-    return $func->value->Call(
-      $func instanceof \Types\Reference\Reference ? $func->GetBase() : null,
-      $args
-    );
+    if($base->GetBase() instanceof \Types\Reference\Reference){
+       $b = $base->GetBase()->GetBase();
+       if($b instanceof \Types\Objects\Activation\Activation){
+         $b = null;
+       }
+    }else
+       $b = null;
+   
+    return new ExpresionResult($value->Call($b, $arg));
   }
 }

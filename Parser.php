@@ -24,6 +24,18 @@ use Expresion\BoolExpresion\BoolExpresion;
 use Expresion\NullExpresion\NullExpresion;
 use Expresion\ThisExpresion\ThisExpresion;
 use Expresion\CallExpresion\CallExpresion;
+use Expresion\FunctionExpresion\FunctionExpresion;
+use Statment\Statment\Statment;
+use Statment\EmptyStatment\EmptyStatment;
+use Statment\VarStatment\VarStatment;
+use Statment\FunctionStatment\FunctionStatment;
+use Statment\ExpresionStatment\ExpresionStatment;
+use Statment\ReturnStatment\ReturnStatment;
+use Statment\BlockStatment\BlockStatment;
+use Statment\IfStatment\IfStatment;
+use Statment\WhileStatment\WhileStatment;
+use Statment\BreakStatment\BreakStatment;
+use Statment\ContinueStatment\ContinueStatment;
 
 class Parser{
   private $reader;
@@ -39,7 +51,7 @@ class Parser{
 
   public function parse(Ecma $ecma){
     while($this->token->currentToken()->type != "EOF"){
-      $com = $this->parseStatment($ecma);
+      $com = $this->parseStatment()->parse($ecma);
       if(!$com->isNormal()){
         return $com;
       }
@@ -47,33 +59,142 @@ class Parser{
     return new Completion(Completion::NORMAL);
   }
 
-  private function parseStatment(Ecma $ecma) : Completion{
+  private function parseStatment() : Statment{
     $token = $this->token->currentToken();
     if($token->type == "punctuator"){
       switch($token->value){
         case ";":
           $this->token->next();
-          return new Completion(Completion::NORMAL);
+          return new EmptyStatment();
+        case "{":
+          return $this->getStatmentBlock();
       }
     }elseif($token->type == "keyword"){
       switch($token->value){
         case "var":
          $line = $this->token->currentToken()->line;
          $this->token->next();
-         $this->parseVariableDeclarationList()->parse($ecma);
+         $var = new VarStatment($this->parseVariableDeclarationList());
          if($this->token->currentToken()->line == $line){
            if($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != ";"){
-             throw new RuntimeException("Missing ;");
+             throw new \RuntimeException("Missing ;");
            }
            $this->token->next();
          }
-         return new Completion(Completion::NORMAL);
+         return $var;
+         case "function":
+           return $this->createFunction();
+        case "return":
+           $line = $this->token->currentToken()->line;
+           $this->token->next();
+           $expresion = $this->expresion();
+           if($this->token->currentToken()->line == $line){
+             if($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != ";"){
+               throw new RuntimeException("Missing ;");
+             }
+             $this->token->next();
+           }
+
+           return new ReturnStatment($expresion);
+        case "if":
+           return $this->getIf();
+        case "while":
+           return $this->getWhile();
+        case "break";
+           $this->token->next();
+           $this->expect("punctuator", ";");
+           $this->token->next();
+           return new BreakStatment();
+        case "continue";
+           $this->token->next();
+           $this->expect("punctuator", ";");
+           $this->token->next();
+           return new ContinueStatment();
       }
     }
-    return $this->expresionStatment($ecma);
+    return $this->expresionStatment();
   }
 
-  private function expresionStatment(Ecma $ecma) : Completion{
+  private function getWhile(){
+    $this->token->next();
+    $this->expect("punctuator", "(");
+    $this->token->next();
+    $expresion = $this->expresion();
+    $this->expect("punctuator", ")");
+    $this->token->next();
+    return new WhileStatment($expresion, $this->parseStatment());
+  }
+
+  private function getStatmentBlock(){
+     $statment = [];
+     $this->token->next();
+     while($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != "}"){
+        $statment[] = $this->parseStatment();
+     }
+     $this->token->next();
+     return new BlockStatment($statment);
+  }
+
+  private function getIf(){
+    $this->token->next();
+    $this->expect("punctuator", "(");
+    $this->token->next();
+    $expresion = $this->expresion();
+    $this->expect("punctuator", ")");
+    $this->token->next();
+    $true = $this->parseStatment();
+    if($this->token->currentToken()->type == "keyword" && $this->token->currentToken()->value == "else"){
+      $this->token->next();
+      $false = $this->parseStatment();
+    }else
+      $false = new EmptyStatment();
+    return new IfStatment($expresion, $true, $false);
+  }
+
+  private function getBlock(){
+    $arg = "";
+    $count = 1;
+    while(true){
+      if($this->reader->current() == "{"){
+        $count++;
+      }elseif($this->reader->current() == "}"){
+        $count--;
+        if($count == 0){
+          $this->reader->next();
+          return $arg;
+        }
+      }
+      $arg .= $this->reader->current();
+      $this->reader->next();
+    }
+
+  }
+
+  private function createFunction() : Statment{
+    $this->token->next();
+    $this->expect("identify");
+    $name = $this->token->currentToken();
+    $this->token->next();
+    $this->expect("punctuator", "(");
+    $args = [];
+    if($this->token->next()->type != "punctuator" && $this->token->currentToken()->value != ")"){
+      $this->expect("identify");
+      $args[] = $this->token->currentToken()->value;
+      while($this->token->next()->type == "punctuator" && $this->token->currentToken()->value == ","){
+        $this->token->next();
+        $this->expect("identify");
+        $args[] = $this->token->currentToken()->value;
+      }
+    }
+    $this->expect("punctuator", ")");
+    $this->token->next();
+    $this->expect("punctuator", "{");
+    $block = $this->getBlock();
+    $this->token->next();
+    return new FunctionStatment(new FunctionExpresion($name->value, $args, $block));
+  }
+
+  private function expresionStatment() : Statment{
     $line = $this->token->currentToken()->line;
     $expresion = $this->expresion();
     if($line == $this->token->currentToken()->line){
@@ -83,7 +204,7 @@ class Parser{
       }
       $this->token->next();
     }
-     return new Completion(Completion::NORMAL, $expresion->parse($ecma));
+     return new ExpresionStatment($expresion);
   }
 
   public function expresion() : BaseExpresion{

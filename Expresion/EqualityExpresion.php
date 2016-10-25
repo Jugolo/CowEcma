@@ -3,6 +3,7 @@ namespace Expresion\EqualityExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
 use Types\Value\Value;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class EqualityExpresion implements BaseExpresion{
   private $arg;
@@ -15,8 +16,8 @@ class EqualityExpresion implements BaseExpresion{
     $this->arg2 = $arg2;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    $result =  \Compare\Compare::compare($ecma->GetValue($this->arg1->parse($ecma)), $ecma->GetValue($this->arg2->parse($ecma)));
-    return new Value("Boolean", $this->arg == "==" ? $result : !$result);
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    $result =  \Compare\Compare::compare($this->arg1->parse($ecma)->GetValue(), $this->arg2->parse($ecma)->GetValue());
+    return new ExpresionResult(new Value("Boolean", $this->arg == "==" ? $result : !$result));
   }
 }

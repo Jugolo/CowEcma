@@ -9,7 +9,7 @@ use Types\Value\Value;
 class FunctionPrototype extends HeadObject{
   public function __construct(FunctionConstructor $func){
     $this->Class = "Function";
-    $this->prototype = new HeadObject();
+    $this->Prototype = new HeadObject();
     $this->Put("constructor", new Property(new Value("Object", $func)));
     $this->Put("toString", new Property(new Value("Object", new FunctionPrototypeToString())));
   }

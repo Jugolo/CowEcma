@@ -2,6 +2,7 @@
 namespace Expresion\ObjectExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 use Types\Reference\Reference;
 
 class ObjectExpresion implements BaseExpresion{
@@ -13,14 +14,10 @@ class ObjectExpresion implements BaseExpresion{
     $this->name = $name;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    return new Reference(
-      new \Types\Value\Value(
-        "Object",
-        $ecma->GetValue($this->base->parse($ecma))->ToObject()
-        ),
-      $this->name instanceof \Expresion\IdentifyExpresion\IdentifyExpresion ? $this->name->identify : $ecma->GetValue($this->name->parse($ecma))->ToString(),
-      $ecma->getCurrentObject()
-    );
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    return new ExpresionResult(new Reference(
+      $this->base->parse($ecma)->GetValue()->ToObject(),
+      $this->name instanceof \Expresion\IdentifyExpresion\IdentifyExpresion ? $this->name->identify : $this->name->parse($ecma)->GetValue()->ToString()
+    ));
   }
 }

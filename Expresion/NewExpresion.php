@@ -2,6 +2,7 @@
 namespace Expresion\NewExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class NewExpresion implements BaseExpresion{
   private $left;
@@ -12,26 +13,26 @@ class NewExpresion implements BaseExpresion{
     $this->right = $right;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    $left = $ecma->GetValue($this->left->parse($ecma));
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    $left = $this->left->parse($ecma)->GetValue();
     if(!$left->IsObject()){
-      throw new RuntimeException("Missing object after 'new'");
+      throw new \RuntimeException("Missing object after 'new'");
     }
 
     if(!($left->value instanceof \Types\Objects\Constructor\Constructor)){
-      throw new RuntimeException("The object after 'new' does containe a constructor!");
+      throw new \RuntimeException("The object after 'new' does containe a constructor!");
     }
 
     $args = [];
     for($i=0;$i<count($this->right);$i++){
-      $args[] = $ecma->GetValue($this->right->parse($ecma));
+      $args[] = $this->right[$i]->parse($ecma)->GetValue();
     }
 
     $obj = $left->value->Construct($args);
     if(!$obj->isObject()){
-      throw new RuntimeException("The object Construct dont return a object");
+      throw new \RuntimeException("The object Construct dont return a object");
     }
     
-    return $obj;
+    return new ExpresionResult($obj);
   }
 }

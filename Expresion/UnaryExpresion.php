@@ -6,6 +6,7 @@ use Ecma\Ecma;
 use Types\Value\Value;
 use Types\Objects\HeadObject\HeadObjectDelete;
 use Types\Refrence\Refrence;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class UnaryExpresion implements BaseExpresion{
   private $value;
@@ -16,41 +17,41 @@ class UnaryExpresion implements BaseExpresion{
     $this->value = $value;
   }
 
-  public function parse(Ecma $ecma){
+  public function parse(Ecma $ecma) : ExpresionResult{
     switch($this->arg){
       case "delete":
         return $this->doDelete($ecma);
       case "void":
-        $ecma->GetValue($this->value->parse($ecma));
-        return new Value("Undefined", null);
+        $this->value->parse($ecma);
+        return new ExpresionResult(new Value("Undefined", null));
       case "typeof":
         return $this->doTypeof($ecma);
       case "++":
         $value = ($operator = $this->value->Parse($ecma))->GetValue()->ToNumber()+1;
-        $operator->PutValue(new Value("Number", $value));
-        return new Value("Number", $value);
+        $operator->GetBase()->PutValue(new Value("Number", $value));
+        return new ExpresionResult(new Value("Number", $value));
       case "--":
         $value = ($operator = $this->value->Parse($ecma))->GetValue()->ToNumber()-1;
-        $operator->PutValue(new Value("Number", $value));
-        return new Value("Number", $value);
+        $operator->GetBase()->PutValue(new Value("Number", $value));
+        return new ExpresionResult(new Value("Number", $value));
       case "+":
-        return new Value("Number", +$this->value->parse($ecma)->GetValue()->ToNumber());
+        return new ExpresionResult(new Value("Number", +$this->value->parse($ecma)->GetValue()->ToNumber()));
       case "-":
-        return new Value("Number", -$this->value->parse($ecma)->GetValue()->ToNumber());
+        return new ExpresionResult(new Value("Number", -$this->value->parse($ecma)->GetValue()->ToNumber()));
       case "~":
-        return new Value("Number", ~$this->value->parse($ecma)->GetValue()->ToNumber());
+        return new ExpresionResult(new Value("Number", ~$this->value->parse($ecma)->GetValue()->ToNumber()));
       case "!":
-        return new Value("Boolean", !$this->value->parse($ecma)->GetValue()->ToBoolean());
+        return new ExpresionResult(new Value("Boolean", !$this->value->parse($ecma)->GetValue()->ToBoolean()));
     }
   }
 
   private function doTypeof(Ecma $ecma){
     $value = $this->value->parse($ecma);
-    if($value instanceof Refrence && $value->GetBase() == null){
-      return new Value("String", "undefined");
+    if($value->GetBase() instanceof Refrence && $value->GetBase() == null){
+      return new ExpresionResult(new Value("String", "undefined"));
     }
 
-    return new Value("String", $ecma->GetValue($value)->type);
+    return new ExpresionResult(new Value("String", $value->GetValue()->type));
   }
 
   private function doDelete(Ecma $ecma){
@@ -58,12 +59,12 @@ class UnaryExpresion implements BaseExpresion{
     $base  = $value->GetBase();
 
     if(!($base instanceof \Types\Objects\HeadObject\HeadObject))
-      return new Value("Boolean", true);
+      return new ExpresionResult(new Value("Boolean", true));
 
     if($base instanceof HeadObjectDelete){
-      return new Value("Boolean", $base->Delete($value->GetPropertyName()));
+      return new ExpresionResult(new Value("Boolean", $base->Delete($value->GetPropertyName())));
     }
 
-    return new Value("Boolean", !$base->HasProperty($value->GetPropertyName()));
+    return new ExpresionResult(new Value("Boolean", !$base->HasProperty($value->GetPropertyName())));
   }
 }

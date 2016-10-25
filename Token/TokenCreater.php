@@ -63,6 +63,12 @@ class TokenCreater{
       case ')':
         $this->reader->pop();
         return new TokenBuffer("punctuator", ")", $this->line);
+      case '{':
+        $this->reader->pop();
+        return new TokenBuffer("punctuator", "{", $this->line);
+      case '}':
+        $this->reader->pop();
+        return new TokenBuffer("punctuator", "}", $this->line);
       case '/':
         $this->reader->pop();
         if($this->reader->current() == "="){
@@ -287,7 +293,7 @@ class TokenCreater{
   }
 
   private function getHex(){
-    $buffer = "";
+    $digit = "";
     while($this->isHexDigit()){
       $digit .= $this->reader->pop();
     }
@@ -308,7 +314,7 @@ class TokenCreater{
       $this->reader->pop();
       if($this->reader->current() == "x" || $this->reader->current() == "X"){
         $this->reader->pop();
-        $digit .= $this->getHex();
+        $digit = $this->getHex();
       }else{
         $digit = $this->getOctal();
       }
@@ -340,7 +346,7 @@ class TokenCreater{
     if($this->isDigit())
       return true;
     $ansii = ord($this->reader->current());
-    return $ansii >= 65 && $ansii <= 70 || $asnii >= 97 && $ansii <= 102;
+    return $ansii >= 65 && $ansii <= 70 || $ansii >= 97 && $ansii <= 102;
   }
 
   private function isDigit(){

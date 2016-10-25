@@ -12,7 +12,7 @@ class Property{
      $this->attribute = $attribute;
   }
 
-  public function getValue(){
+  public function getValue() : Value{
     return $this->value;
   }
 

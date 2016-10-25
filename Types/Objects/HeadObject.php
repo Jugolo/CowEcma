@@ -15,15 +15,19 @@ class HeadObject implements HeadObjectDelete{
   public $Class;
   public $Value;
 
+  public function getPropertyName(){
+    return array_keys(array_merge($this->propertys, $this->Prototype == null ? [] : $this->Prototype->getPropertyName()));
+  }
+
   public function Get(string $propertyname){
-    if($this->HasProperty($propertyname)){
+    if(!empty($this->propertys[$propertyname])){
       return $this->propertys[$propertyname];
     }
-    if($this->prototype === null){
-      return new Value("undefined");
+    if($this->Prototype === null){
+      return new Value("Undefined", null);
     }
 
-    return $this->prototype->Get($propertyname);
+    return $this->Prototype->Get($propertyname);
   }
 
   public function Put(string $propertyname, Property $value){
@@ -40,21 +44,21 @@ class HeadObject implements HeadObjectDelete{
     if($this->HasProperty($propertyname) && $this->propertys[$propertyname]->hasAttribute("ReadOnly"))
         return false;
 
-    if($this->prototype === null)
+    if($this->Prototype === null)
       return true;
 
-    if($this->prototype instanceof HostObject)
+    if($this->Prototype instanceof HostObject)
       return false;
 
-    return $this->prototype->CanPut($propertyname);
+    return $this->Prototype->CanPut($propertyname);
   }
 
   public function HasProperty($propertyname){
      if(!empty($this->propertys[$propertyname]))
        return true;
-     if($this->prototype === null)
+     if($this->Prototype === null)
        return false;
-     return $this->prototype->HasProperty($propertyname);
+     return $this->Prototype->HasProperty($propertyname);
   }
 
   public function Delete($propertyname){

@@ -33,7 +33,7 @@ class Compare{
     }
 
     if($type == "Number"){
-      return self::compareNumber($arg1, $arg2);
+      return self::compareNumber((int)$arg1, (int)$arg2);
     }
 
     return $arg1 === $arg2;

@@ -2,6 +2,7 @@
 namespace Expresion\ArrayExpresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class ArrayExpresion implements BaseExpresion{
   private $arg1;
@@ -12,9 +13,10 @@ class ArrayExpresion implements BaseExpresion{
     $this->arg2 = $arg2;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    $base = $ecma->GetValue($this->arg1->parse($ecma))->ToObject();
-    $name = $ecma->GetValue($this->arg2->parse($ecma))->ToString();
-    return new \Types\Reference\Reference(new \Types\Value\Value("Object", $base), $name, $ecma->getCurrentObject());
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    return new ExpresionResult(new \Types\Reference\Reference(
+       $this->arg1->parse($ecma)->GetValue()->ToObject(),
+       $this->arg2->parse($ecma)->GetValue()->ToString()
+    ));
   }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Types\Completion;
 
+use Types\Value\Value;
+
 class Completion{
   private $state;
   private $value;
@@ -17,5 +19,25 @@ class Completion{
 
   public function isNormal(){
     return $this->state === self::NORMAL;
+  }
+
+  public function isReturn(){
+    return $this->state == self::RETURNS;
+  }
+
+  public function isBreak(){
+    return $this->state == self::BREAKS;
+  }
+
+  public function isContinue(){
+    return $this->state == self::CONTINUES;
+  }
+
+  public function GetValue() : Value{
+    if($this->value == null){
+      return new Value("Undefined", null);
+    }
+
+    return $this->value->GetValue();
   }
 }

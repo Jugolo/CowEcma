@@ -9,16 +9,17 @@ use Types\Objects\Call\Call;
 
 class Objects extends HeadObject implements Constructor, Call{
   public function __construct(){
-    $this->prototype = new HeadObject();
-    $this->prototype->Put("constructor", new Property(new Value("Object", new ObjectPrototypeConstructor($this))));
-    $this->prototype->Put("toString", new Property(new Value("Object", new ObjectPrototypeToString())));
-    $this->prototype->Put("valueOf", new Property(new Value("Object", new ObjectPrototypeValueOf())));
+    $prototype = new HeadObject();
+    $prototype->Put("constructor", new Property(new Value("Object", new ObjectPrototypeConstructor($this))));
+    $prototype->Put("toString", new Property(new Value("Object", new ObjectPrototypeToString())));
+    $prototype->Put("valueOf", new Property(new Value("Object", new ObjectPrototypeValueOf())));
+    $this->Put("prototype", new Property(new Value("Object", $prototype)));
   }
 
   public function Construct(array $arg) : Value{
     if(empty($arg) || $arg[0]->isNull() || $arg[0]->isUndefined()){
       $obj = new Objects();
-      $obj->prototype = $this->prototype;
+      $obj->Prototype = $this->Prototype;
       $obj->Class = "Object";
       return new Value("Object", $obj);
     }

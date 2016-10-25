@@ -3,34 +3,39 @@ namespace Types\Reference;
 
 use Types\Value\Value;
 use Types\Objects\Property\Property;
-use Types\Objects\GlobelObject\GlobelObject;
+use Types\Objects\HeadObject\HeadObject;
 
 class Reference{
   private $value;
   private $name;
-  private $globelObject;
 
-  public function __construct(Value $value, string $name, GlobelObject $object){
+  public function __construct(HeadObject $value, string $name){
     $this->value = $value;
     $this->name = $name;
-    $this->globelObject = $object;
   }
 
   public function GetBase(){
-    return $this->globelObject;
+    return $this->value;
   }
 
   public function GetPropertyName() : string{
     return $this->name;
   }
 
-  public function GetValue(){
+  public function GetValue() : Value{
     $base = $this->GetBase();
     if(!$base){
       throw new \RuntimeException("Reference->GetBase() return null");
     }
 
-    return $base->Get($this->GetPropertyName())->value;
+    $value = $base->Get($this->GetPropertyName());
+    if($value instanceof Property){
+      $value = $value->getValue();
+    }
+    if($value == null){
+     echo "<pre>";print_r($this);exit("</pre>");
+    }
+    return $value;
   }
 
   public function PutValue(Value $w){

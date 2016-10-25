@@ -19,9 +19,9 @@ use Types\Objects\Property\Property;
 use Types\Value\Value;
 
 function pushTestData(Ecma\Ecma $ecma){
-  $globel = $ecma->getCurrentObject();
-  $globel->Put("asset", new Property(new Value("Object", new TestData\Test\Test()), ["ReadOnly"]));
-  $globel->Put("type", new Property(new Value("Object", new TestData\TestType\Test()), ["ReadOnly"]));
+  $ecma->pushVariabel("asset", new Value("Object", new TestData\Test\Test()));
+  $ecma->pushVariabel("type", new Value("Object", new TestData\TestType\Test()));
+  $ecma->pushVariabel("print", new Value("Object", new TestData\TestPrint\TestPrint()));
 }
 
 function renderDir(string $dir){
@@ -36,7 +36,7 @@ function renderDir(string $dir){
     }else{
       $ecma = new Ecma\Ecma();
       pushTestData($ecma);
-      echo "----".$dir.$item."<br>";
+      echo "----".$dir.$item."<br>\r\n";
       $ecma->parse($dir.$item, true);
     }
   }

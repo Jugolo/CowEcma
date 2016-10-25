@@ -1,6 +1,8 @@
 <?php
 namespace Expresion\IdentifyExpresion;
 
+use Expresion\ExpresionResult\ExpresionResult;
+
 class IdentifyExpresion implements \Expresion\BaseExpresion\BaseExpresion{
   public $identify;
 
@@ -8,7 +10,7 @@ class IdentifyExpresion implements \Expresion\BaseExpresion\BaseExpresion{
     $this->identify = $identify;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
-    return $ecma->getIdentify($this->identify);
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
+    return new ExpresionResult($ecma->getIdentify($this->identify));
   }
 }

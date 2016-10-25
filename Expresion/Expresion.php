@@ -2,6 +2,7 @@
 namespace Expresion\Expresion;
 
 use Expresion\BaseExpresion\BaseExpresion;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class Expresion implements BaseExpresion{
   private $expresion;
@@ -10,9 +11,9 @@ class Expresion implements BaseExpresion{
    $this->expresion = $expresion;
   }
 
-  public function parse(\Ecma\Ecma $ecma){
+  public function parse(\Ecma\Ecma $ecma) : ExpresionResult{
     for($i=0;$i<count($this->expresion);$i++)
       $result = $this->expresion[$i]->parse($ecma);
-    return $ecma->GetValue($result);
+    return $result;
   }
 }

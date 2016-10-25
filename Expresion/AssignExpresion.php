@@ -5,6 +5,7 @@ use Expresion\BaseExpresion\BaseExpresion;
 use Ecma\Ecma;
 use Types\Reference\Reference;
 use Types\Objects\Property\Property;
+use Expresion\ExpresionResult\ExpresionResult;
 
 class AssignExpresion implements BaseExpresion{
   private $first;
@@ -17,33 +18,33 @@ class AssignExpresion implements BaseExpresion{
      $this->second = $second;
   }
 
-  public function parse(Ecma $ecma){
+  public function parse(Ecma $ecma) : ExpresionResult{
      switch($this->arg){
        case "=":
         return $this->lig($ecma);
        default:
        $first = $this->first->parse($ecma);
         $result = \Math\Math::math(
-            $ecma->GetValue($first),
+            $first->GetValue(),
             substr($this->arg, 0, strlen($this->arg)-1),
-            $ecma->GetValue($this->second->parse($ecma))
+            $this->second->parse($ecma)->GetValue()
         );
-        $first->PutValue($result);
-        return $result;
+        $first->GetBase()->PutValue($result);
+        return new ExpresionResult($result);
      }
   }
 
   private function lig(Ecma $ecma){
     if($this->first instanceof \Expresion\IdentifyExpresion\IdentifyExpresion){
-      $ecma->getCurrentObject()->Put($this->first->identify, new Property(($value = $ecma->GetValue($this->second->parse($ecma)))));
-      return $value;
+      $ecma->pushVariabel($this->first->identify, ($value = $this->second->parse($ecma)->GetValue()));
+      return new ExpresionResult($value);
     }
-    $first = $this->first->parse($ecma);
+    $first = $this->first->parse($ecma)->GetBase();
     if($first instanceof Reference){
-      $first->PutValue($value = $ecma->GetValue($this->second->parse($ecma)));
+      $first->PutValue($value = $this->second->parse($ecma)->GetValue());
     }else{
-      $ecma->getCurrentObject()->Put($this->first->identify, new Property($ecma->GetValue($value = $this->second->parse($ecma))));
+      $ecma->pushVariabel($this->first->identify, $value = $this->second->parse($ecma)->GetValue());
     }
-    return $value;
+    return new ExpresionResult($value);
   }
 }
