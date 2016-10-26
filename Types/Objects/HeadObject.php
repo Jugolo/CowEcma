@@ -16,7 +16,7 @@ class HeadObject implements HeadObjectDelete{
   public $Value;
 
   public function getPropertyName(){
-    return array_keys(array_merge($this->propertys, $this->Prototype == null ? [] : $this->Prototype->getPropertyName()));
+    return array_keys($this->propertys);
   }
 
   public function Get(string $propertyname){

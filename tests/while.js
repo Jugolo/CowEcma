@@ -13,15 +13,14 @@ function test(){
 }
 
 asset(test(), "hallo", "test() should return 'hallo'");
-
 while(true){
   i--;
-  if(i<5){
-   continue;
-   print("dont work");
-  }
   if(i==0){
    break;
+   print("dont work");
+  }
+  if(i<5){
+   continue;
    print("dont work");
   }
 }

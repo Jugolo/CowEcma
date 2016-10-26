@@ -36,6 +36,8 @@ use Statment\IfStatment\IfStatment;
 use Statment\WhileStatment\WhileStatment;
 use Statment\BreakStatment\BreakStatment;
 use Statment\ContinueStatment\ContinueStatment;
+use Statment\ForStatment\ForStatment;
+use Statment\WithStatment\WithStatment;
 
 class Parser{
   private $reader;
@@ -110,9 +112,63 @@ class Parser{
            $this->expect("punctuator", ";");
            $this->token->next();
            return new ContinueStatment();
+        case "for":
+           return $this->getFor();
+        case "with":
+           return $this->getWith();
       }
     }
     return $this->expresionStatment();
+  }
+
+  private function getWith(){
+    $this->token->next();
+    $this->expect("punctuator", "(");
+    $expresion = $this->expresion();
+    $this->expect("punctuator", ")");
+    $this->token->next();
+    return new WithStatment($expresion, $this->parseStatment());
+  }
+
+  private function getFor(){
+    $expresion = [];
+    $this->token->next();
+    $this->expect("punctuator", "(");
+    if($this->token->next()->type == "punctuator" && $this->token->currentToken()->value == ";"){
+      $expresion[] = null;
+      $this->token->next();
+    }else{
+      if($this->token->currentToken()->type == "keyword" && $this->token->currentToken()->value == "var"){
+        $this->token->next();
+        $expresion[] = new VarStatment($this->parseVariableDeclarationList());
+      }else
+        $expresion[] = $this->expresion();
+        if($this->token->currentToken()->type != "keyword" || $this->token->currentToken()->value != "in"){
+         $this->expect("punctuator", ";");
+         $this->token->next();
+        }
+    }
+
+    if($expresion[0] !== null && $this->token->currentToken()->type == "keyword" && $this->token->currentToken()->value == "in"){
+      $this->token->next();
+       $expresion[] = $this->expresion();
+    }else{
+      if($this->token->currentToken()->type == "punctuator" && $this->token->currentToken()->value == ";"){
+        $this->token->next();
+        $expresion[] = null;
+      }else{
+        $expresion[] = $this->expresion();
+        $this->expect("punctuator", ";");
+        if($this->token->next()->type == "punctuator" && $this->token->currentToken()->value == ")"){
+         $expresion[] = null;
+       }else{
+          $expresion[] = $this->expresion();
+       }
+      }
+    }
+    $this->expect("punctuator", ")");
+    $this->token->next();
+    return new ForStatment($expresion, $this->parseStatment());
   }
 
   private function getWhile(){
@@ -128,9 +184,10 @@ class Parser{
   private function getStatmentBlock(){
      $statment = [];
      $this->token->next();
-     while($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != "}"){
+     while($this->token->currentToken()->type != "EOF" && $this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != "}"){
         $statment[] = $this->parseStatment();
      }
+     $this->expect("punctuator", "}");
      $this->token->next();
      return new BlockStatment($statment);
   }
@@ -199,7 +256,6 @@ class Parser{
     $expresion = $this->expresion();
     if($line == $this->token->currentToken()->line){
       if($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != ";"){
-        exit($this->token->currentToken()->value."(".$this->token->currentToken()->type.")");
         throw new \RuntimeException("Missing ;");
       }
       $this->token->next();

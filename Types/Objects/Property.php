@@ -16,6 +16,10 @@ class Property{
     return $this->value;
   }
 
+  public function hasAttribute(string $name){
+    return in_array($name, $this->attribute);
+  }
+
   public function __get($arg){
     switch($arg){
       case "value":
@@ -23,9 +27,5 @@ class Property{
     }
 
     return null;
-  }
-
-  public function hasAttribute(string $key){
-    return in_array($key, $this->attribute);
   }
 }

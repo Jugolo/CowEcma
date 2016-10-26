@@ -34,8 +34,8 @@ class RelationalExpresion implements BaseExpresion{
       if($o == $t)
        return new Value("Boolean", ($this->arg == "<=" || $this->arg == ">="));
 
-      if($o == +0 && $t == -0 || $o == -0 && $o == +0)
-        return new Value("Boolean", false);
+      /*if($o == +0 && $t == -0 || $o == -0 && $o == +0)
+        return new Value("Boolean", false);*/
 
       if($o == +INF || $o == -INF || $t == +INF || $t == -INF)
         return new Value("Boolean", false);
