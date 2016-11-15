@@ -14,6 +14,7 @@ class Ecma{
   public $object;
   public $globel;
   private $context;
+  private $test = "This is to test CowEcma";
 
   public function __construct(){
     $this->context = new Stack();
