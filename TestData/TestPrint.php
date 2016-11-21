@@ -1,8 +1,8 @@
 <?php
 namespace TestData\TestPrint;
 
-use Types\Objects\Call\Call;
-use Types\Value\Value;
+use Ecma\Types\Objects\Call\Call;
+use Ecma\Types\Value\Value;
 
 class TestPrint implements Call{
   public function Call($obj, array $arg) : Value{

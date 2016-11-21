@@ -1,13 +1,14 @@
 <?php
 namespace TestData\EchoTest;
 
-use Types\Objects\HeadObject\HeadObject;
-use Types\Objects\Call\Call;
+use Ecma\Types\Objects\HeadObject\HeadObject;
+use Ecma\Types\Objects\Call\Call;
+use Ecma\Types\Value\Value;
 
 class EchoTest extends HeadObject implements Call{
-  public function Call($obj, array $args) : \Types\Value\Value{
+  public function Call($obj, array $args) : Value{
     for($i=0;$i<count($args);$i++)
      echo $args[$i]->ToString()."<br>\r\n";
-    return new \Types\Value\Value("Undefind", null);
+    return new Value("Undefind", null);
   }
 }

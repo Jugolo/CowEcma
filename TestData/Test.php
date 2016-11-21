@@ -1,18 +1,20 @@
 <?php
 namespace TestData\Test;
 
-use Types\Objects\HeadObject\HeadObject;
-use Types\Objects\Call\Call;
+use Ecma\Types\Objects\HeadObject\HeadObject;
+use Ecma\Types\Objects\Call\Call;
+use Ecma\Compare\Compare;
+use Ecma\Types\Value\Value;
 
 class Test extends HeadObject implements Call{
-  public function Call($obj, array $args) : \Types\Value\Value{
-    if(!\Compare\Compare::compare($args[0], $args[1])){
+  public function Call($obj, array $args) : Value{
+    if(!Compare::compare($args[0], $args[1])){
       echo "<pre>";
       print_r($args[0]);
       print_r($args[1]);
       echo ("</pre>");
       throw new \RuntimeException($args[2]->ToString());
     }
-    return new \Types\Value\Value("Undefined", null);
+    return new Value("Undefined", null);
   }
 }

@@ -20,3 +20,4 @@ asset(0377, 255, "0377 and 255 is the same!");
 "I love to create a \x7DE Javascript program";
 "I love to create a \u7DE 7DE 7DE 7DE Javascript program";
 "I love to create a \0377 Javascript program";
+"Hallo "+"World";

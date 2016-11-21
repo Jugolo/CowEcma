@@ -1,11 +1,12 @@
 <?php
 namespace TestData\TestType;
 
-use Types\Objects\HeadObject\HeadObject;
-use Types\Objects\Call\Call;
+use Ecma\Types\Objects\HeadObject\HeadObject;
+use Ecma\Types\Objects\Call\Call;
+use Ecma\Types\Value\Value;
 
 class Test extends HeadObject implements Call{
-  public function Call($obj, array $args) : \Types\Value\Value{
+  public function Call($obj, array $args) : Value{
     $arg = [];
     for($i=0;$i<count($args);$i++){
       $arg[] = $args[$i]->value."(".$args[$i]->type.")";
