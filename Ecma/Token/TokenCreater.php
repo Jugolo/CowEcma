@@ -222,7 +222,7 @@ class TokenCreater{
     while(!$this->reader->eof()){
       $char = $this->reader->pop();
       if($this->reader->isLineTerminator()){
-        throw new RuntimeException("A string can`t not contain a line terminator!");
+        throw new \RuntimeException("A string can`t not contain a line terminator!");
       }
 
       if($char == $end){
@@ -253,7 +253,7 @@ class TokenCreater{
             for($i=0;$i<4;$i++){
               $buffer .= $this->getHex();
               if($this->reader->pop() != " "){
-                throw new RuntimeException("Missing space after hexdigit");
+                throw new \RuntimeException("Missing space after hexdigit");
               }
             }
           break;
@@ -268,7 +268,7 @@ class TokenCreater{
       }
     }
 
-    throw new RuntimeException("Could not get a ".$end." got a end of line");
+    throw new \RuntimeException("Could not get a ".$end." got a end of line");
   }
 
   private function getIdentify(){
