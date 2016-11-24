@@ -288,9 +288,13 @@ class Parser{
   private function parseVariabelDeclaration(){
     $this->expect("identify");
     $identify = $this->token->currentToken()->value;
-    $this->token->next();
-    $this->expect("punctuator", "=");
-    $this->token->next();
+    if($this->token->next()->type == "punctuator" && $this->token->currentToken()->value == "="){
+       $this->token->next();
+       $value = $this->parseAssignmentExpression();
+    }else{
+       $value = new EmptyStatment();
+    }
+ 
     return new AssignExpresion(new IdentifyExpresion($identify), "=", $this->parseAssignmentExpression());
   }
 
