@@ -19,9 +19,9 @@ class ConditionalExpresion implements BaseExpresion{
   public function parse(Ecma $ecma) : ExpresionResult{
     $value = $this->conditional->parse($ecma)->GetValue()->ToBoolean();
     if($value){
-      return $this->arg1->parse($ecma)->GetValue();
+      return $this->arg1->parse($ecma);
     }else{
-      return $this->arg2->parse($ecma)->GetValue();
+      return $this->arg2->parse($ecma);
     }
   }
 }
