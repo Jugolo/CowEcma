@@ -295,7 +295,7 @@ class Parser{
        $value = new EmptyStatment();
     }
  
-    return new AssignExpresion(new IdentifyExpresion($identify), "=", $this->parseAssignmentExpression());
+    return new AssignExpresion(new IdentifyExpresion($identify), "=", $value);
   }
 
   private function parseAssignmentExpression(){
