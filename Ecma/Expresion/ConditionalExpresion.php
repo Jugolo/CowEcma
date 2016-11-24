@@ -1,5 +1,5 @@
 <?php
-namespace Ecma\Expresion\ConditionalExpresion\ConditionalExpresion;
+namespace Ecma\Expresion\ConditionalExpresion;
 
 use Ecma\Expresion\BaseExpresion\BaseExpresion;
 use Ecma\Expresion\ExpresionResult\ExpresionResult;
