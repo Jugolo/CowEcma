@@ -227,12 +227,13 @@ class TokenCreater{
     }
     while(!$this->reader->eof()){
       $char = $this->reader->pop();
-      if($this->reader->isLineTerminator()){
-        throw new \RuntimeException("A string can`t not contain a line terminator!");
-      }
 
       if($char == $end){
         return new TokenBuffer("String", $buffer, $this->line);
+      }
+
+      if($this->reader->isLineTerminator()){
+        throw new \RuntimeException("A string can`t not contain a line terminator!");
       }
 
       if($char == "\\"){
