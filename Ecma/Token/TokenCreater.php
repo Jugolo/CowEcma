@@ -51,6 +51,9 @@ class TokenCreater{
       case '?':
         $this->reader->pop();
         return new TokenBuffer("punctuator", "?", $this->line);
+      case ":":
+        $this->reader->pop();
+        return new TokenBuffer("punctuator", ":", $this->line);
       case ';':
         $this->reader->pop();
         return new TokenBuffer("punctuator", ";", $this->line);
