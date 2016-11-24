@@ -31,6 +31,13 @@ class Ecma{
     throw new \RuntimeException("Unknown identify: ".$name);
   }
 
+  public function hasIdentify(string $name){
+    for($i=0;$i<$this->context->size();$i++)
+      if($this->context->get($i)->scope->HasProperty($name))
+        return true;
+    return false;
+  }
+
   public function getThis() : HeadObject{
     return $this->context->peek()->_this;
   }
