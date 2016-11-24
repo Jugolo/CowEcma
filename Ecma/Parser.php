@@ -25,6 +25,7 @@ use Ecma\Expresion\NullExpresion\NullExpresion;
 use Ecma\Expresion\ThisExpresion\ThisExpresion;
 use Ecma\Expresion\CallExpresion\CallExpresion;
 use Ecma\Expresion\FunctionExpresion\FunctionExpresion;
+use Ecma\Expresion\EmptyExpresion\EmptyExpresion;
 use Ecma\Statment\Statment\Statment;
 use Ecma\Statment\EmptyStatment\EmptyStatment;
 use Ecma\Statment\VarStatment\VarStatment;
@@ -292,7 +293,7 @@ class Parser{
        $this->token->next();
        $value = $this->parseAssignmentExpression();
     }else{
-       $value = new EmptyStatment();
+       $value = new EmptyExpresion();
     }
  
     return new AssignExpresion(new IdentifyExpresion($identify), "=", $value);
