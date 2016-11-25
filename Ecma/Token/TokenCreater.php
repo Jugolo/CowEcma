@@ -213,6 +213,21 @@ class TokenCreater{
         $this->line++;
       }elseif($this->reader->isWhiteSpace()){
         $this->reader->pop();
+      }elseif($this->reader->current() == "/"){
+        $p = $this->reader->peek();
+        if($p == "/"){
+          while(!$this->reader->isLineTerminator())
+            $this->reader->pop();
+        }elseif($p == "*"){
+          $this->reader->pop();
+          while(true){
+            if($this->reader->pop() == "*" && $this->reader->pop() == "/"){
+              break;
+            }
+          }
+        }else{
+          break;
+        }
       }else{
         break;
       }
