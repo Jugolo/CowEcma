@@ -3,10 +3,12 @@ namespace Ecma\Types\Value;
 
 use Ecma\Token\TokenCreater\TokenCreater;
 use Ecma\Reader\Reader;
+use Ecma\Ecma\Ecma;
 
 class Value{
   private $value;
   private $type;
+  private $ecma;
 
   public function __get($name){
     switch($name){
@@ -25,9 +27,10 @@ class Value{
     return $this->type == "Null";
   }
 
-  public function __construct(string $type, $value = null){
+  public function __construct(Ecma $ecma, string $type, $value = null){
     $this->type = $type;
     $this->value = $value;
+    $this->ecma = $ecma;
   }
 
   public function ToPrimetiv($input = "Number"){
