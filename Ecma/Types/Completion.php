@@ -2,19 +2,22 @@
 namespace Ecma\Types\Completion;
 
 use Ecma\Types\Value\Value;
+use Ecma\Ecma\Ecma;
 
 class Completion{
   private $state;
   private $value;
+  private $ecma;
 
   const NORMAL         = 1;
   const BREAKS         = 2;
   const CONTINUES      = 3;
   const RETURNS        = 4;
 
-  public function __construct(int $state, $value = null){
+  public function __construct(Ecma $ecma, int $state, $value = null){
     $this->value = $value;
     $this->state = $state;
+    $this->ecma  = $ecma;
   }
 
   public function isNormal(){
@@ -35,7 +38,7 @@ class Completion{
 
   public function GetValue() : Value{
     if($this->value == null){
-      return new Value("Undefined", null);
+      return new Value($this->ecma, "Undefined", null);
     }
 
     return $this->value->GetValue();
