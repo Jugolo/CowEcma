@@ -16,6 +16,8 @@ class Value{
         return $this->value;
       case "type":
         return $this->type;
+      case "ecma":
+        return $this->ecma;
     }
   }
 
