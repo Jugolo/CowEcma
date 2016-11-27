@@ -2,10 +2,13 @@
 namespace Ecma\Types\Objects\GlobelObject\Objects;
 
 use Ecma\Types\Objects\HeadObject\HeadObject;
+use Ecma\Ecma\Ecma;
 
 class Objects extends HeadObject{
-  public function __construct(){
+  private $ecma;
+  public function __construct(Ecma $ecma){
     $this->prototype = new HeadObject();
+    $this->ecma = $ecma;
   }
 
   public function Construct($arg){
@@ -13,7 +16,7 @@ class Objects extends HeadObject{
       $obj = new Objects();
       $obj->prototype = $this->prototype;
       $obj->Class = "Object";
-      return new Value("Object", $obj);
+      return new Value($this->ecma, "Object", $obj);
     }
 
     return $arg[0]->ToObject();
