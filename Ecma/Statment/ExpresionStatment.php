@@ -14,6 +14,6 @@ class ExpresionStatment implements Statment{
   }
 
   public function parse(Ecma $ecma) : Completion{
-     return new Completion(Completion::NORMAL, $this->expresion->parse($ecma));
+     return new Completion($ecma, Completion::NORMAL, $this->expresion->parse($ecma));
   }
 }
