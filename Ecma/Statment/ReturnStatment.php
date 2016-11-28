@@ -14,6 +14,6 @@ class ReturnStatment implements Statment{
   }
 
   public function parse(Ecma $ecma) : Completion{
-    return new Completion(Completion::RETURNS, $this->expresion->parse($ecma));
+    return new Completion($ecma, Completion::RETURNS, $this->expresion->parse($ecma));
   }
 }
