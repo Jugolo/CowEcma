@@ -7,39 +7,43 @@ use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\Property\Property;
 use Ecma\Compare\Compare;
 use Ecma\Types\Objects\Arrays\ArrayConstructor\ArrayConstructor;
+use Ecma\Ecma\Ecma;
 
 class ArrayPrototype extends HeadObject{
-  public function __construct(ArrayConstructor $constructor){
-    $this->Put("constructor", new Property(new Value("Object", $constructor)));
-    $this->Put("toString", new Property(new Value("Object", new ArrayToString())));
-    $this->Put("join", new Property(new Value("Object", new ArrayJoin())));
-    $this->Put("reverse", new Property(new Value("Object", new ArrayReverse())));
-    $this->Put("sort", new Property(new Value("Object", new ArraySort())));
+  protected $ecma;
+
+  public function __construct(ArrayConstructor $constructor, Ecma $ecma){
+    $this->ecma = $ecma;
+    $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
+    $this->Put("toString", new Property(new Value($ecma, "Object", new ArrayToString())));
+    $this->Put("join", new Property(new Value($ecma, "Object", new ArrayJoin())));
+    $this->Put("reverse", new Property(new Value($ecma, "Object", new ArrayReverse())));
+    $this->Put("sort", new Property(new Value($ecma, "Object", new ArraySort())));
   }
 }
 
 class ArraySort implements Call{
-  public function Call($obj, array $args) : Value{
+  public function Call(Value $obj, array $args) : Value{
     $length = $obj->Get("length")->getValue()->ToNumber();
     if($length <= 1){
       return $obj;
     }
 
     if(count($args) == 0){
-      $args[0] = new Value("Undefine", null);
+      $args[0] = new Value($obj->ecma, "Undefine", null);
     }
 
     $array = $this->getCleanArray($obj);
     $call = [$this, "helper"];
-    usort($array, function(Value $x, Value $y) use($call, $args){
-      return call_user_func($call, $x, $y, $args[0]);//this is cool :D
+    usort($array, function(Value $x, Value $y) use($call, $args, $obj){
+      return call_user_func($call, $x, $y, $args[0], $obj);//this is cool :D
     });
 
     for($i=0;$i<count($array);$i++){
       $obj->Put(strval($i), new Property($array[$i]));
     }
 
-    return new Value("Object", $obj);
+    return new Value($obj->ecma, "Object", $obj);
   }
 
   private function getCleanArray($obj) : array{
@@ -52,7 +56,7 @@ class ArraySort implements Call{
     return $return;
   }
 
-  public function helper(Value $x, Value $y, Value $comparefn){
+  public function helper(Value $x, Value $y, Value $comparefn, HeadObject $obj){
     if($x->isUndefined() || $y->isUndefined()){
       if($x->isUndefined() && $y->isUndefined()){
         return 0;
@@ -64,7 +68,7 @@ class ArraySort implements Call{
     }
 
     if($comparefn->isObject() && $comparefn instanceof Call){
-      return $comparefn->ToObject()->Call(null, [$x, $y])->ToNumber();
+      return $comparefn->ToObject()->Call($obj, [$x, $y])->ToNumber();
     }
 
 
@@ -73,10 +77,10 @@ class ArraySort implements Call{
 }
 
 class ArrayJoin implements Call{
-  public function Call($obj, array $args) : Value{
+  public function Call(Value $obj, array $args) : Value{
     $length = $obj->Get("length")->getValue()->ToNumber();
     if($length == 0){
-      return new Value("String", "");
+      return new Value($obj->ecma, "String", "");
     }
     if(count($args) == 0){
       $sep = ",";
@@ -93,12 +97,12 @@ class ArrayJoin implements Call{
       }
     }
 
-    return new Value("String", implode($sep, $str));
+    return new Value($obj->ecma, "String", implode($sep, $str));
   }
 }
 
 class ArrayReverse implements Call{
-  public function Call($obj, array $args) : Value{
+  public function Call(Value $obj, array $args) : Value{
     $len = $obj->Get("length")->getValue()->ToNumber();
     $mid = floor($len / 2);
     $k = 0;
@@ -124,12 +128,12 @@ class ArrayReverse implements Call{
       }
       $k++;
     }
-    return new Value("Object", $obj);
+    return new Value($obj->ecma, "Object", $obj);
   }
 }
 
 class ArrayToString implements Call{
-  public function Call($obj, array $args) : Value{
-    return $obj->Get("join")->getValue()->ToObject()->Call($obj, []);
+  public function Call(Value $obj, array $args) : Value{
+    return $obj->ToObject()->Get("join")->getValue()->ToObject()->Call($obj, []);
   }
 }
