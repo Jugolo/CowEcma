@@ -29,6 +29,6 @@ class WhileStatment implements Statment{
       }
     }
 
-    return new Completion(Completion::NORMAL);
+    return new Completion($ecma, Completion::NORMAL);
   }
 }
