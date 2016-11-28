@@ -15,6 +15,6 @@ class FunctionStatment implements Statment{
 
   public function parse(Ecma $ecma) : Completion{
     $this->expresion->parse($ecma);
-    return new Completion(Completion::NORMAL);
+    return new Completion($ecma, Completion::NORMAL);
   }
 }
