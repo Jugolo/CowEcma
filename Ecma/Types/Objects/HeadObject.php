@@ -24,6 +24,10 @@ class HeadObject implements HeadObjectDelete{
       return $this->propertys[$propertyname];
     }
     if($this->Prototype === null){
+      //this is hack. But is the smart way to do it ;) 
+      if(empty($this->ecma)){
+        throw new \RuntimeException("Unkown property ".$propertyname);
+      }
       return new Property(new Value("Undefined", null));
     }
 
