@@ -8,6 +8,6 @@ use Ecma\Ecma\Ecma;
 
 class EmptyExpresion implements BaseExpresion{
   public function parse(Ecma $ecma) : ExpresionResult{
-    return new ExpresionResult(new Value("Undefined", null));
+    return new ExpresionResult(new Value($ecma, "Undefined", null));
   }
 }
