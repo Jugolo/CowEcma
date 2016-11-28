@@ -33,11 +33,11 @@ class CallExpresion implements BaseExpresion{
     if($base->GetBase() instanceof Reference){
        $b = $base->GetBase()->GetBase();
        if($b instanceof Activation){
-         $b = null;
+         $b = $ecma->globel;
        }
     }else
-       $b = null;
+       $b = $ecma->globel;
 
-    return new ExpresionResult($value->Call($b, $arg));
+    return new ExpresionResult($value->Call(new Value($ecma, "Object", $b), $arg));
   }
 }
