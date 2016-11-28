@@ -6,14 +6,17 @@ use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\Constructor\Constructor;
 use Ecma\Types\Objects\Call\Call;
+use Ecma\Ecma\Ecma;
 
 class Objects extends HeadObject implements Constructor, Call{
-  public function __construct(){
+  protected $ecma;
+  public function __construct(Ecma $ecma){
+    $this->ecma = $ecma;
     $prototype = new HeadObject();
-    $prototype->Put("constructor", new Property(new Value("Object", new ObjectPrototypeConstructor($this))));
-    $prototype->Put("toString", new Property(new Value("Object", new ObjectPrototypeToString())));
-    $prototype->Put("valueOf", new Property(new Value("Object", new ObjectPrototypeValueOf())));
-    $this->Put("prototype", new Property(new Value("Object", $prototype)));
+    $prototype->Put("constructor", new Property(new Value($ecma, "Object", new ObjectPrototypeConstructor($this))));
+    $prototype->Put("toString", new Property(new Value($ecma, "Object", new ObjectPrototypeToString())));
+    $prototype->Put("valueOf", new Property(new Value($ecma, "Object", new ObjectPrototypeValueOf())));
+    $this->Put("prototype", new Property(new Value($ecma, "Object", $prototype)));
   }
 
   public function Construct(array $arg) : Value{
@@ -21,26 +24,26 @@ class Objects extends HeadObject implements Constructor, Call{
       $obj = new Objects();
       $obj->Prototype = $this->Prototype;
       $obj->Class = "Object";
-      return new Value("Object", $obj);
+      return new Value($this->ecma, "Object", $obj);
     }
 
-    return new Value("Object", $arg[0]->ToObject());
+    return new Value($this->ecma, "Object", $arg[0]->ToObject());
   }
 
-  public function Call($obj, array $arg) : Value{
-    return new Value("Object", $this->Construct($arg));
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($this->ecma, "Object", $this->Construct($arg));
   }
 }
 
 class ObjectPrototypeToString extends HeadObject{
-  function Call($obj, array $arg) : Value{
+  function Call(Value $obj, array $arg) : Value{
     return "[Object ".$obj->Class."]";
   }
 }
 
 class ObjectPrototypeValueOf extends HeadObject{
-  function Call($obj, array $arg) : Value{
-    return new Value("Object", $obj->ToObject());
+  function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Object", $obj->ToObject());
   }
 }
 
