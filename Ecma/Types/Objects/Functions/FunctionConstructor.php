@@ -16,7 +16,7 @@ class FunctionConstructor extends HeadObject implements Constructor, Call{
 
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
-    $this->Put("prototype", new Property(new Value($ecma, "Object", new FunctionPrototype($this)), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("prototype", new Property(new Value($ecma, "Object", new FunctionPrototype($this, $ecma)), ["DontEnum", "DontDelete", "ReadOnly"]));
     $this->Put("length", new Property(new Value($ecma, "Number", 1)));
   }
 
