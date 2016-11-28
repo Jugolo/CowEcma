@@ -22,7 +22,7 @@ class BitwiseExpresion implements BaseExpresion{
     $left = $this->arg1->parse($ecma)->GetValue();
     $right = $this->arg2->parse($ecma)->GetValue();
     if($this->arg == "+" && ($left->isString() || $right->isString()))
-      return new ExpresionResult(new Value("String", $left->ToString().$right->ToString()));
+      return new ExpresionResult(new Value($ecma, "String", $left->ToString().$right->ToString()));
     return new ExpresionResult(Math::math($left, $this->arg, $right));
   }
 }
