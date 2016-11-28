@@ -44,7 +44,7 @@ class ForStatment implements Statment{
         }
       }
     }
-    return new Completion(Completion::NORMAL);
+    return new Completion($ecma, Completion::NORMAL);
   }
 
   private function normalFor(Ecma $ecma) : Completion{
@@ -66,6 +66,6 @@ class ForStatment implements Statment{
        if($this->expresion[2] != null)
          $this->expresion[2]->parse($ecma);
     }
-    return new Completion(Completion::NORMAL);
+    return new Completion($ecma, Completion::NORMAL);
   }
 }
