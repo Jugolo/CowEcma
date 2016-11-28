@@ -14,6 +14,6 @@ class BoolExpresion implements BaseExpresion{
   }
 
   public function parse(Ecma $ecma) : ExpresionResult{
-    return new ExpresionResult(new Value("Boolean", $this->bool));
+    return new ExpresionResult(new Value($ecma, "Boolean", $this->bool));
   }
 }
