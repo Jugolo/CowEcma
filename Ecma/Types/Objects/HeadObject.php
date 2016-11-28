@@ -28,7 +28,7 @@ class HeadObject implements HeadObjectDelete{
       if(empty($this->ecma)){
         throw new \RuntimeException("Unkown property ".$propertyname);
       }
-      return new Property(new Value("Undefined", null));
+      return new Property(new Value($this->ecma, "Undefined", null));
     }
 
     return $this->Prototype->Get($propertyname);
