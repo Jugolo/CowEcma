@@ -18,6 +18,6 @@ class BlockStatment implements Statment{
       if(!$c->isNormal())
         return $c;
     }
-    return new Completion(Completion::NORMAL);
+    return new Completion($ecma, Completion::NORMAL);
   }
 }
