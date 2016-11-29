@@ -14,6 +14,6 @@ class NumberExpresion implements BaseExpresion{
   }
 
   public function parse(Ecma $ecma) : ExpresionResult{
-    return new ExpresionResult(new Value("Number", (int)$this->value));
+    return new ExpresionResult(new Value($ecma, "Number", (int)$this->value));
   }
 }

@@ -11,33 +11,33 @@ use Ecma\Math\Math;
 
 class Functions{
   public function __construct(GlobelObject $container, Ecma $ecma){
-    $container->Put("eval", new Property(new Value("Object", new EvalFunction($ecma))));
-    $container->Put("parseInt", new Property(new Value("Object", new ParseIntFunction())));
-    $container->Put("parseFloat", new Property(new Value("Object", new ParseFloatFunction())));
-    $container->Put("escape", new Property(new Value("Object", new ParseEscapeFunction())));
-    $container->Put("unescape", new Property(new Value("Object", new ParseUnescapeFunction())));
-    $container->Put("isNaN", new Property(new Value("Object", new ParseIsNaNFunction())));
-    $container->Put("isFinite", new Property(new Value("Object", new ParseIsFiniteFunction())));
+    $container->Put("eval", new Property(new Value($ecma, "Object", new EvalFunction($ecma))));
+    $container->Put("parseInt", new Property(new Value($ecma, "Object", new ParseIntFunction())));
+    $container->Put("parseFloat", new Property(new Value($ecma, "Object", new ParseFloatFunction())));
+    $container->Put("escape", new Property(new Value($ecma, "Object", new ParseEscapeFunction())));
+    $container->Put("unescape", new Property(new Value($ecma, "Object", new ParseUnescapeFunction())));
+    $container->Put("isNaN", new Property(new Value($ecma, "Object", new ParseIsNaNFunction())));
+    $container->Put("isFinite", new Property(new Value($ecma, "Object", new ParseIsFiniteFunction())));
   }
 }
 
 class ParseIsFiniteFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
-    return new Value("Boolean", is_finite($arg[0]->ToNumber()));
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Boolean", is_finite($arg[0]->ToNumber()));
   }
 }
 
 class ParseIsNaNFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
-    return new Value("Boolean", is_nan($arg[0]->ToNumber()));
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($ecma, "Boolean", is_nan($arg[0]->ToNumber()));
   }
 }
 
 class ParseUnescapeFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     $str = preg_split('//u', $arg[0]->ToString(), -1, PREG_SPLIT_NO_EMPTY);
     if($str == ""){
-      return new Value("String", "");
+      return new Value($obj->ecma, "String", "");
     }
     $s = "";
     for($k=0;$k<count($str);$k++){
@@ -62,7 +62,7 @@ class ParseUnescapeFunction extends HeadObject implements Call{
       }
     }
 
-    return new Value("String", $s);
+    return new Value($obj->ecma, "String", $s);
   }
 
   private function isHex(string $char){
@@ -71,11 +71,11 @@ class ParseUnescapeFunction extends HeadObject implements Call{
 }
 
 class ParseEscapeFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     $str = preg_split('//u', $arg[0]->ToString(), -1, PREG_SPLIT_NO_EMPTY);
     $R = "";
     if(count($str) == 0){
-      return new Value("String", "");
+      return new Value($obj->value, "String", "");
     }
 
     for($k=0;$k<count($str);$k++){
@@ -98,31 +98,25 @@ class ParseEscapeFunction extends HeadObject implements Call{
        $R .= $S;
     }
 
-    return new Value("String", $R);
+    return new Value($obj->ecma, "String", $R);
   }
 }
 
 class EvalFunction extends HeadObject implements Call{
-  private $ecma;
-
-  public function __construct(Ecma $ecma){
-    $this->ecma = $ecma;
-  }
-
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     if(!$arg[0]->isString())
       return $arg[0];
 
-    return $this->ecma->parse($arg[0]->ToString())->GetValue();
+    return $obj->ecma->parse($arg[0]->ToString())->GetValue();
   }
 }
 
 class ParseFloatFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     $str = ltrim($arg[0]->ToString());
     $ansii = ord($str[0]);
     if($ansii < 48 && $ansii > 57){
-      return new Value("Number", NAN);
+      return new Value($obj->ecma, "Number", NAN);
     }
 
     $int = "";
@@ -135,12 +129,12 @@ class ParseFloatFunction extends HeadObject implements Call{
       }
     }
 
-    return new Value("Number", intval($int));
+    return new Value($obj->ecma, "Number", intval($int));
   }
 }
 
 class ParseIntFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     $str = ltrim($arg[0]->ToString());
     $sign = 1;
 
@@ -157,32 +151,32 @@ class ParseIntFunction extends HeadObject implements Call{
         $redix = $arg[1]->ToNumber();
         if($redix != 0){
           if($redix < 2 || $redix > 36){
-            return new Value("Number", NAN);
+            return new Value($obj->ecma, "Number", NAN);
           }
           if($redix == 16 && strlen($str) >= 2){
             $prefix = substr($str, 0, 2);
             if($prefix == "0x" || $prefix == "0X"){
-              return $this->step22(substr($str, 2), $sign);
+              return $this->step22(substr($str, 2), $sign, $obj->ecma);
             }
-            return $this->step22($str, 0, $sign);
+            return $this->step22($str, 0, $sign, $obj->ecma);
           }
         }
       }
 
       if(!empty($str) && $str[0] == 0){
         if(strlen($str) >= 2 && ($str[1] != "x" || $str[1] != "X")){
-          return $this->step22($str, 8, $sign);
+          return $this->step22($str, 8, $sign, $obj->ecma);
         }
-        return $this->step22(substr($str, 2), 16, $sign);
+        return $this->step22(substr($str, 2), 16, $sign, $obj->ecma);
       }
     }
 
-    return $this->step22($str, 10, $sign);
+    return $this->step22($str, 10, $sign, $obj->ecma);
   }
 
-  private function step22(string $s, int $R, int $sign) : Value{
+  private function step22(string $s, int $R, int $sign, Ecma $ecma) : Value{
     if(strlen($s) == 0){
-      return new Value("Number", NAN);
+      return new Value($ecma, "Number", NAN);
     }
 
     $result = 0;
@@ -200,13 +194,13 @@ class ParseIntFunction extends HeadObject implements Call{
       }
 
       if($index == NAN || $index >= $R){
-            return $this->step22(substr($s, 0, $i), $R);
+            return $this->step22(substr($s, 0, $i), $R, $ecma);
       }
 
       $result += $index*$pow;
       $pow = $pow * $R;
     }
 
-    return new Value("Number", $sign * $result);
+    return new Value($ecma, "Number", $sign * $result);
   }
 }

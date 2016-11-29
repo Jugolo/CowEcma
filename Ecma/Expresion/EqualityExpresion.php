@@ -20,6 +20,6 @@ class EqualityExpresion implements BaseExpresion{
 
   public function parse(Ecma $ecma) : ExpresionResult{
     $result =  Compare::compare($this->arg1->parse($ecma)->GetValue(), $this->arg2->parse($ecma)->GetValue());
-    return new ExpresionResult(new Value("Boolean", $this->arg == "==" ? $result : !$result));
+    return new ExpresionResult(new Value($ecma, "Boolean", $this->arg == "==" ? $result : !$result));
   }
 }

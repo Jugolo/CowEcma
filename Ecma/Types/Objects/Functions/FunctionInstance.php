@@ -10,15 +10,15 @@ use Ecma\ExcuteContext\ExcuteContext;
 use Ecma\Ecma\Ecma;
 
 class FunctionInstance extends HeadObject implements Constructor, Call{
-  private $ecma;
+  protected $ecma;
   private $body;
   private $args;
   private $orgPrototype;
   public function __construct(Ecma $ecma, string $args, string $body, HeadObject $prototype){
     $this->Prototype = $prototype;
     $this->args = explode(", ", $args);
-    $this->Put("length", new Property(new Value("Number", count($this->args))));
-    $this->Put("prototype", new Property(new Value("Object", $this->Prototype)));
+    $this->Put("length", new Property(new Value($ecma, "Number", count($this->args))));
+    $this->Put("prototype", new Property(new Value($ecma, "Object", $this->Prototype)));
     $this->ecma = $ecma;
     $this->body = $body;
   }
@@ -27,23 +27,19 @@ class FunctionInstance extends HeadObject implements Constructor, Call{
     $object = new HeadObject();
     if($this->HasProperty("prototype"))
      $object->Prototype = $this->Get("prototype")->value->ToObject();
-    $result = $this->Call($object, $arg);
+    $result = $this->Call(new Value($this->ecma, "Object", $object), $arg);
     if($result->isObject())
       return $result;
-    return new Value("Object", $object);
+    return new Value($this->ecma, "Object", $object);
   }
 
-  public function Call($obj, array $args) : Value{
-     if($obj == null){
-       $obj = $this->ecma->globel;
-     }
-
+  public function Call(Value $obj, array $args) : Value{
      $activation = new HeadObject();
      $agument = new HeadObject();
-     $activation->Put("arguments", new Property(new Value("Object", $agument), ["DontEnum"]));
+     $activation->Put("arguments", new Property(new Value($obj->ecma, "Object", $agument), ["DontEnum"]));
      $agument->Prototype = $this->Get("prototype")->value->ToObject();
-     $agument->Put("callee", new Property(new Value("Object", $this), ["DontEnum"]));
-     $agument->Put("length", new Property(new Value("Number", count($args)), ["DontEnum"]));
+     $agument->Put("callee", new Property(new Value($obj->ecma, "Object", $this), ["DontEnum"]));
+     $agument->Put("length", new Property(new Value($obj->ecma, "Number", count($args)), ["DontEnum"]));
 
      for($i=0;$i<count($args) && $i<count($this->args);$i++){
        $agument->Put($this->args[$i], new Property($args[$i]));
@@ -51,11 +47,11 @@ class FunctionInstance extends HeadObject implements Constructor, Call{
        $activation->Put($this->args[$i], new Property($args[$i]));
      }
 
-     $this->ecma->enterScope(new ExcuteContext($activation, $activation, $obj));
+     $this->ecma->enterScope(new ExcuteContext($activation, $activation, $obj->ToObject()));
      $return = $this->ecma->parse($this->body);
      $this->ecma->leaveScope();
      if($return->isReturn())
        return $return->GetValue();
-     return new Value("Undefined", null);
+     return new Value($obj->ecma, "Undefined", null);
   }
 }

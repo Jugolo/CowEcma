@@ -20,7 +20,7 @@ class LogicalExpresion implements BaseExpresion{
   public function parse(Ecma $ecma) : ExpresionResult{
     if($this->arg == "&&"){
       if(!($v = $this->arg1->parse($ecma)->GetValue())->ToBoolean())
-       return new ExpresionResult(new Value("Boolean", false));
+       return new ExpresionResult(new Value($ecma, "Boolean", false));
       return $this->arg2->parse($ecma);
     }elseif($this->arg == "||"){
       if(($v = $this->arg1->parse($ecma))->GetValue()->ToBoolean())

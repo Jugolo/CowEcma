@@ -7,6 +7,6 @@ use Ecma\Ecma\Ecma;
 
 class ContinueStatment implements Statment{
   public function parse(Ecma $ecma) :  Completion{
-     return new Completion(Completion::CONTINUES);
+     return new Completion($ecma, Completion::CONTINUES);
   }
 }

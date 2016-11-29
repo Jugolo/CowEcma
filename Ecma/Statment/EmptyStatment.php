@@ -7,6 +7,6 @@ use Ecma\Ecma\Ecma;
 
 class EmptyStatment implements Statment{
   public function parse(Ecma $ecma) :  Completion{
-     return new Completion(Completion::NORMAL);
+     return new Completion($ecma, Completion::NORMAL);
   }
 }

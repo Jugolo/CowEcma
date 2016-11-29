@@ -24,7 +24,11 @@ class HeadObject implements HeadObjectDelete{
       return $this->propertys[$propertyname];
     }
     if($this->Prototype === null){
-      return new Property(new Value("Undefined", null));
+      //this is hack. But is the smart way to do it ;) 
+      if(empty($this->ecma)){
+        throw new \RuntimeException("Unkown property ".$propertyname);
+      }
+      return new Property(new Value($this->ecma, "Undefined", null));
     }
 
     return $this->Prototype->Get($propertyname);
@@ -70,12 +74,12 @@ class HeadObject implements HeadObjectDelete{
     return true;
   }
 
-  public function DefaultValue(string $hint){
+  public function DefaultValue(string $hint, Ecma $ecma){
     switch($hint){
       case "String":
         $obj = $this->Get("toString")->getValue();
         if($obj->isObject()){
-          return $obj->ToObject()->Call($this, [])->ToString();
+          return $obj->ToObject()->Call(new Value($ecma, "Object", $this), [])->ToString();
         }
         $obj = $this->Get("valueOf")->getValue();
         if($obj->isObject()){

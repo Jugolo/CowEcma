@@ -11,12 +11,12 @@ class FunctionExpresion implements BaseExpresion{
   private $args;
   private $body;
 
-  public function __construct(string $name, array $args, string $body){
+  public function __construct(string $name, array $args, string $body, Ecma $ecma){
     $this->name = $name;
-    $this->args = array_map(function($v){
-      return new Value("String", $v);
+    $this->args = array_map(function($v) use($ecma){
+      return new Value($ecma, "String", $v);
     }, $args);
-    $this->body = new Value("String", $body);
+    $this->body = new Value($ecma, "String", $body);
   }
 
   public function parse(Ecma $ecma) : ExpresionResult{

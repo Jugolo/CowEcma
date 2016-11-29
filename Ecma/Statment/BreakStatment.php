@@ -7,6 +7,6 @@ use Ecma\Ecma\Ecma;
 
 class BreakStatment implements Statment{
   public function parse(Ecma $ecma) :  Completion{
-     return new Completion(Completion::BREAKS);
+     return new Completion($ecma, Completion::BREAKS);
   }
 }

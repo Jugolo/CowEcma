@@ -12,15 +12,15 @@ use Ecma\Ecma\Ecma;
 
 class FunctionConstructor extends HeadObject implements Constructor, Call{
 
- private $ecma;
+ protected $ecma;
 
   public function __construct(Ecma $ecma){
-    $this->Put("prototype", new Property(new Value("Object", new FunctionPrototype($this)), ["DontEnum", "DontDelete", "ReadOnly"]));
-    $this->Put("length", new Property(new Value("Number", 1)));
     $this->ecma = $ecma;
+    $this->Put("prototype", new Property(new Value($ecma, "Object", new FunctionPrototype($this, $ecma)), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("length", new Property(new Value($ecma, "Number", 1)));
   }
 
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     return $this->Construct($arg);
   }
 
@@ -39,6 +39,6 @@ class FunctionConstructor extends HeadObject implements Constructor, Call{
     }
     $func =  new FunctionInstance($this->ecma, $args, $body, $this->Get("prototype")->GetValue()->value);
     $func->Class = "Function";
-    return new Value("Object", $func);
+    return new Value($this->ecma, "Object", $func);
   }
 }
