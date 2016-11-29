@@ -28,13 +28,13 @@ class StringPrototype extends HeadObject{
 
 class StringToUpperCase extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
-    return new Value($obj->ecma, "String", strtoupper($obj->ToString());
+    return new Value($obj->ecma, "String", strtoupper($obj->ToString()));
   }
 }
 
 class StringToLowerCase extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
-    return new Value($obj->ecma, "String", strtolower($obj->ToString());
+    return new Value($obj->ecma, "String", strtolower($obj->ToString()));
   }
 }
 
