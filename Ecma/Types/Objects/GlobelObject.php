@@ -11,6 +11,7 @@ use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\Arrays\ArrayConstructor\ArrayConstructor;
 use Ecma\Ecma\Ecma;
 use Ecma\Types\Objects\GlobelObject\Functions\Functions;
+use Ecma\Types\Objects\String\StringConstructor\StringConstructor;
 
 class GlobelObject extends HeadObject{
   public function __construct(Ecma $ecma){
@@ -20,6 +21,7 @@ class GlobelObject extends HeadObject{
     $this->Put("Array", new Property(new Value($ecma, "Object", new ArrayConstructor($ecma))));
     $this->Put("Object", new Property(new Value($ecma, "Object", ($ecma->object = new Objects($ecma)))));
     $this->Put("Function", new Property(new Value($ecma, "Object", new FunctionConstructor($ecma))));
+    $this->Put("String", new Property(new Value($ecma, "Object", new StringConstructor($ecma))));
     new Functions($this, $ecma);
   }
 }
