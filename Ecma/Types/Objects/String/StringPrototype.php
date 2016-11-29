@@ -18,11 +18,25 @@ class StringPrototype extends HeadObject{
     $this->Put("charCodeAt", new Property(new Value($ecma, "Object", new StringCharCodeAt())));
     $this->Put("indexOf", new Property(new Value($ecma, "Object", new StringIndexOf())));
     $this->Put("lastIndexOf", new Property(new Value($ecma, "Object", new StringLastIndexOf())));
+    $this->Put("split", new Property(new Value($ecma, "Object", new StringSplit())));
+  }
+}
+
+class StringSplit extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $string = $obj->ToString();
+    $split = $arg[0]->ToString();
+    $ar = explode($arg[0]->ToString(), $obj->ToString(), empty($arg[1]) || $arg[1]->isUndefined() ? PHP_INT_MAX : $arg[1]->ToNumber());
+    $array = new ArrayInstance();
+    for($i=0;$i<count($ar);$i++){
+      $array->Put(strval($i), new Property(new Value($obj->ecma, "String", $ar[$i])));
+    }
+    return new Value($obj->ecma, "Object", $array);
   }
 }
 
 class StringLastIndexOf extends HeadObject implements Call{
-  public function Call(Value $obj, array $arg) : Call{
+  public function Call(Value $obj, array $arg) : Value{
     $string = $obj->ToString();
     $find = $arg[0]->ToString();
     if(empty($arg[1]) || $arg[1]->isUndefined())
