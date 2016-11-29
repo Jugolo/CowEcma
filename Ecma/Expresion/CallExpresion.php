@@ -4,6 +4,7 @@ namespace Ecma\Expresion\CallExpresion;
 use Ecma\Expresion\BaseExpresion\BaseExpresion;
 use Ecma\Expresion\ExpresionResult\ExpresionResult;
 use Ecma\Ecma\Ecma;
+use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Reference\Reference;
 use Ecma\Types\Objects\Activation\Activation;
