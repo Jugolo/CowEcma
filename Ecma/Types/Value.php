@@ -2,6 +2,7 @@
 namespace Ecma\Types\Value;
 
 use Ecma\Token\TokenCreater\TokenCreater;
+use Ecma\Types\Objects\String\StringInstance\StringInstance;
 use Ecma\Reader\Reader;
 use Ecma\Ecma\Ecma;
 
@@ -37,7 +38,7 @@ class Value{
 
   public function ToPrimetiv($input = "Number"){
     if($this->isObject()){
-      return $this->value->DefaultValue($input);
+      return $this->value->DefaultValue($input, $this->ecma);
     }
     return $this;
   }
@@ -108,6 +109,8 @@ class Value{
   public function ToObject(){
     if($this->isObject())
       return $this->value;
+    if($this->isString())
+      return new StringInstance($this->ToString(), $this->ecma);
     if($this->isUndefined())
       throw new \RuntimeException("Cant convert Undefined to object");
     exit("Make Value->ToObject('".$this->type."')!!");
