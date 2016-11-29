@@ -1,5 +1,5 @@
 <?php
-namespace Ecma\Types\Objects\String\StringPrototype\StringPrototype;
+namespace Ecma\Types\Objects\String\StringPrototype;
 
 use Ecma\Ecma\Ecma;
 use Ecma\Types\Value\Value;
