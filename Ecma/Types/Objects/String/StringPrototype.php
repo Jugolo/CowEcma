@@ -13,6 +13,16 @@ class StringPrototype extends HeadObject{
   public function __construct(StringConstructor $constructor, Ecma $ecma){
     $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
     $this->Put("toString", new Property(new Value($ecma, "Object", new StringToString())));
+    $this->Put("valueOf", new Property(new Value($ecma, "Object", new StringValueOf())));
+  }
+}
+
+class StringValueOf extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $o = $obj->ToObject();
+    if(!($o instanceof StringInstance))
+      throw new \RuntimeException("valueOf should be method of StringInstance!!");
+    return new Value($obj->ecma, "String", $o->Value);
   }
 }
 
