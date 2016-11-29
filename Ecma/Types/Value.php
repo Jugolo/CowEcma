@@ -38,7 +38,7 @@ class Value{
 
   public function ToPrimetiv($input = "Number"){
     if($this->isObject()){
-      return $this->value->DefaultValue($input);
+      return $this->value->DefaultValue($input, $this->ecma);
     }
     return $this;
   }
