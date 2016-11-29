@@ -45,6 +45,7 @@ class Parser{
   private $reader;
   private $token;
   private $allow_call;
+  private $ecma;
 
   public function __construct($code){
     $this->reader = new Reader($code);
@@ -54,6 +55,7 @@ class Parser{
   }
 
   public function parse(Ecma $ecma){
+    $this->ecma = $ecma;
     while($this->token->currentToken()->type != "EOF"){
       $com = $this->parseStatment()->parse($ecma);
       if(!$com->isNormal()){
@@ -250,7 +252,7 @@ class Parser{
     $this->expect("punctuator", "{");
     $block = $this->getBlock();
     $this->token->next();
-    return new FunctionStatment(new FunctionExpresion($name->value, $args, $block));
+    return new FunctionStatment(new FunctionExpresion($name->value, $args, $block, $this->ecma));
   }
 
   private function expresionStatment() : Statment{
