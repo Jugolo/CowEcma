@@ -6,6 +6,6 @@ use Ecma\Types\Objects\HeadObject\HeadObject;
 
 class StringConstructor extends HeadObject{
   public function __construct(Ecma $ecma){
-    $ecma->str = new StringPrototype();
+    $ecma->str = new StringPrototype($ecma);
   }
 }
