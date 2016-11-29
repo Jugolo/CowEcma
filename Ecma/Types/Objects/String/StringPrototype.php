@@ -88,7 +88,7 @@ class StringLastIndexOf extends HeadObject implements Call{
 }
 
 class StringIndexOf extends HeadObject implements Call{
-  public function Call(Value $obj, array $arg) : Call{
+  public function Call(Value $obj, array $arg) : Value{
     $string = $obj->ToString();
     $find = $arg[0]->ToString();
     if(count($arg) < 2 || $arg[1]->isUndefined())
@@ -104,7 +104,7 @@ class StringIndexOf extends HeadObject implements Call{
 }
 
 class StringCharCodeAt extends HeadObject implements Call{
- public function Call(Value $obj, array $arg){
+ public function Call(Value $obj, array $arg) : Value{
    $string = $obj->ToString();
    $pos = $arg[0]->ToNumber();
    $length = strlen($string);
