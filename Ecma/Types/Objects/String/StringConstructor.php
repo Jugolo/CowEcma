@@ -32,7 +32,7 @@ class StringConstructor extends HeadObject implements Call, Constructor{
 }
 
 class StringFromCharCode extends HeadObject implements Call{
-  public function Call(Value $obj, array $arg){
+  public function Call(Value $obj, array $arg) : Value{
     $buffer = "";
     for($i=0;$i<count($arg);$i++)
       $buffer .= chr($arg[$i]->ToNumber());
