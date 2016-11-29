@@ -62,7 +62,7 @@ class Parser{
         return $com;
       }
     }
-    return new Completion(Completion::NORMAL);
+    return new Completion($ecma, Completion::NORMAL);
   }
 
   private function parseStatment() : Statment{
