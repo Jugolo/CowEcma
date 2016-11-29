@@ -11,7 +11,7 @@ class StringConstructor extends HeadObject{
   
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
-    $ecma->str = new StringPrototype($ecma);
+    $this->Prototype = $ecma->str = new StringPrototype($ecma);
   }
   
   public function Call(Value $obj, array $arg) : Value{
