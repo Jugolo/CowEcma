@@ -17,6 +17,23 @@ class StringPrototype extends HeadObject{
     $this->Put("charAt", new Property(new Value($ecma, "Object", new StringCharAt())));
     $this->Put("charCodeAt", new Property(new Value($ecma, "Object", new StringCharCodeAt())));
     $this->Put("indexOf", new Property(new Value($ecma, "Object", new StringIndexOf())));
+    $this->Put("lastIndexOf", new Property(new Value($ecma, "Object", new StringLastIndexOf())));
+  }
+}
+
+class StringLastIndexOf extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Call{
+    $string = $obj->ToString();
+    $find = $arg[0]->ToString();
+    if(empty($arg[1]) || $arg[1]->isUndefined())
+      $index = strrpos($string, $find);
+    else
+      $index = strrpos($string, $find, $arg[1]->ToNumber());
+    
+    if($index === false)
+      $index = -1;
+    
+    return new Value($obj->ecma, "Number", $index);
   }
 }
 
