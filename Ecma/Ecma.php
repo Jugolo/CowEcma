@@ -13,6 +13,7 @@ use Ecma\ExcuteContext\ExcuteContext;
 class Ecma{
   public $object;
   public $globel;
+  public $str;
   private $context;
 
   public function __construct(){
