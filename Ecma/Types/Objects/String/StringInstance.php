@@ -4,6 +4,7 @@ namespace Ecma\Types\Objects\String\StringInstance;
 use Ecma\Ecma\Ecma;
 use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\HeadObject\HeadObject;
+use Ecma\Types\Objects\Property\Property;
 
 class StringInstance extends HeadObject{
   protected $ecma;
