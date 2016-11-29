@@ -6,8 +6,9 @@ use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\Property\Property;
+use Ecma\Types\Objects\Constructor\Constructor;
 
-class StringConstructor extends HeadObject implements Call{
+class StringConstructor extends HeadObject implements Call, Constructor{
   protected $ecma;
   
   public function __construct(Ecma $ecma){
@@ -15,6 +16,12 @@ class StringConstructor extends HeadObject implements Call{
     $this->Prototype = $ecma->str = new StringPrototype($ecma);
     
     $this->Put("fromCharCode", new Property(new Value($ecma, "Object", new StringFromCharCode())));
+  }
+  
+  public function Construct(array $arg) : Value{
+    if(count($arg) == 0)
+      return new Value($this->ecma, "Object", new StringInstance("", $this->ecma));
+    return new Value($this->ecma, "Object", new StringInstance($arg[0]->ToString(), $this->ecma));
   }
   
   public function Call(Value $obj, array $arg) : Value{
