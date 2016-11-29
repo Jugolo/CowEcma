@@ -14,6 +14,6 @@ class StringExpresion implements BaseExpresion{
   }
 
   public function parse(Ecma $ecma) : ExpresionResult{
-    return new ExpresionResult(new Value("String", $this->str));
+    return new ExpresionResult(new Value($ecma, "String", $this->str));
   }
 }
