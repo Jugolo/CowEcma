@@ -7,6 +7,8 @@ use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Objects\Constructor\Constructor;
+use Ecma\Types\Objects\String\StringPrototype\StringPrototype;
+use Ecma\Types\Objects\String\StringInstance\StringInstance;
 
 class StringConstructor extends HeadObject implements Call, Constructor{
   protected $ecma;
