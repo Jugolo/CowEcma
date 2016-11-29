@@ -14,6 +14,19 @@ class StringPrototype extends HeadObject{
     $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
     $this->Put("toString", new Property(new Value($ecma, "Object", new StringToString())));
     $this->Put("valueOf", new Property(new Value($ecma, "Object", new StringValueOf())));
+    $this->Put("charAt", new Property(new Value($ecma, "Object", new StringCharAt())));
+  }
+}
+
+class StringCharAt extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $string = $obj->ToString();
+    $pos = $arg[0]->ToNumber();
+    $length = strlen($string);
+    if($pos < 0 || $length < $pos){
+      return new Value($obj->ecma, "String", "");
+    }
+    return new Value($obj->ecma, "String", $string[$pos]);
   }
 }
 
