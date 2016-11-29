@@ -7,6 +7,7 @@ use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\String\StringConstructor\StringConstructor;
+use Ecma\Types\Objects\String\StringInstance\StringInstance;
 
 class StringPrototype extends HeadObject{
   public function __construct(StringConstructor $constructor, Ecma $ecma){
