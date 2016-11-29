@@ -21,6 +21,20 @@ class StringPrototype extends HeadObject{
     $this->Put("lastIndexOf", new Property(new Value($ecma, "Object", new StringLastIndexOf())));
     $this->Put("split", new Property(new Value($ecma, "Object", new StringSplit())));
     $this->Put("substr", new Property(new Value($ecma, "Object", new StringSubStr())));
+    $this->Put("toLowerCase", new Property(new Value($ecma, "Object", new StringToLowerCase())));
+    $this->Put("toUpperCase", new Property(new Value($ecma, "Object", new StringToUpperCase())));
+  }
+}
+
+class StringToUpperCase extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "String", strtotupper($obj->ToString());
+  }
+}
+
+class StringToLowerCase extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "String", strtolower($obj->ToString());
   }
 }
 
