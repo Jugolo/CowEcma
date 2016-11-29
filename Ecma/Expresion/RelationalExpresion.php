@@ -18,10 +18,10 @@ class RelationalExpresion implements BaseExpresion{
   }
 
   public function parse(Ecma $ecma) : ExpresionResult{
-      return new ExpresionResult($this->Arrow($this->arg1->parse($ecma)->GetValue(), $this->arg2->parse($ecma)->GetValue()));
+      return new ExpresionResult($this->Arrow($ecma, $this->arg1->parse($ecma)->GetValue(), $this->arg2->parse($ecma)->GetValue()));
   }
 
-  private function Arrow(Value $one, Value $two) : Value{
+  private function Arrow(Ecma $ecma, Value $one, Value $two) : Value{
     $o = $one->ToPrimetiv();
     $t = $two->ToPrimetiv();
 
@@ -29,7 +29,7 @@ class RelationalExpresion implements BaseExpresion{
       $o = $o->ToNumber();
       $t = $t->ToNumber();
       if(is_nan($o) || is_nan($t)){
-        return new Value("Undefined", null);
+        return new Value($ecma, "Undefined", null);
       }
 
       if($o == $t)
@@ -39,20 +39,20 @@ class RelationalExpresion implements BaseExpresion{
         return new Value("Boolean", false);*/
 
       if($o == +INF || $o == -INF || $t == +INF || $t == -INF)
-        return new Value("Boolean", false);
+        return new Value($ecma, "Boolean", false);
 
       if($o < $t){
-        return new Value("Boolean", ($this->arg == "<" || $this->arg == "<="));
+        return new Value($ecma, "Boolean", ($this->arg == "<" || $this->arg == "<="));
       }else{
-        return new Value("Boolean", ($this->arg == ">" || $this->arg == ">="));
+        return new Value($ecma, "Boolean", ($this->arg == ">" || $this->arg == ">="));
       }
     }else{
       if(strpos($o->ToString(), $t->ToString()) === 0)
-        return new Value("Boolean", ($this->arg == ">" || $this->arg == ">="));
+        return new Value($ecma, "Boolean", ($this->arg == ">" || $this->arg == ">="));
       if(strpos($t->ToString(), $o->ToString()) === 0)
-        return new Value("Boolean", ($this->arg == "<" || $this->arg == "<="));
+        return new Value($ecma, "Boolean", ($this->arg == "<" || $this->arg == "<="));
 
-      return new Value("Boolean", $o->value < $t->value ? $this->arg == "<" || $this->arg == "<=" : $this->arg == ">" || $this->arg == ">=");
+      return new Value($ecma, "Boolean", $o->value < $t->value ? $this->arg == "<" || $this->arg == "<=" : $this->arg == ">" || $this->arg == ">=");
     }
   }
 }
