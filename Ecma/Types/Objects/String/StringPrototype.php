@@ -40,7 +40,7 @@ class StringToLowerCase extends HeadObject implements Call{
 
 class StringSubStr extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
-    $string = $obj->ToObject();
+    $string = $obj->ToString();
     if(count($arg) < 2){
       $min = min(max($arg[0]->ToNumber(), 0), strlen($string));
       $max = strlen($string);
