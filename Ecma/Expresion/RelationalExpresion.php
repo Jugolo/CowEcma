@@ -33,7 +33,7 @@ class RelationalExpresion implements BaseExpresion{
       }
 
       if($o == $t)
-       return new Value("Boolean", ($this->arg == "<=" || $this->arg == ">="));
+       return new Value($ecma, "Boolean", ($this->arg == "<=" || $this->arg == ">="));
 
       /*if($o == +0 && $t == -0 || $o == -0 && $o == +0)
         return new Value("Boolean", false);*/
