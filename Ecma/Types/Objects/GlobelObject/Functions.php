@@ -103,7 +103,7 @@ class ParseEscapeFunction extends HeadObject implements Call{
 }
 
 class EvalFunction extends HeadObject implements Call{
-  public function Call($obj, array $arg) : Value{
+  public function Call(Value $obj, array $arg) : Value{
     if(!$arg[0]->isString())
       return $arg[0];
 
