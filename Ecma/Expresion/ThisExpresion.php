@@ -8,6 +8,6 @@ use Ecma\Ecma\Ecma;
 
 class ThisExpresion implements BaseExpresion{
   public function parse(Ecma $ecma) : ExpresionResult{
-    return new ExpresionResult(new Value("Object", $ecma->getThis()));
+    return new ExpresionResult(new Value($ecma, "Object", $ecma->getThis()));
   }
 }
