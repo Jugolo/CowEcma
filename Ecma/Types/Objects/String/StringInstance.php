@@ -11,5 +11,7 @@ class StringInstance extends HeadObject{
   public function __construct(string $str, Ecma $ecma){
     $this->Prototype = $ecma->str;
     $this->Value = $str;
+    $this->Class = "String";
+    $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->str)));
   }
 }
