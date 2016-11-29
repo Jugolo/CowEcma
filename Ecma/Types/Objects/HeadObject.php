@@ -3,6 +3,7 @@ namespace Ecma\Types\Objects\HeadObject;
 
 use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\Property\Property;
+use Ecma\Ecma\Ecma;
 
 interface HeadObjectDelete{
   function Delete(string $propertyname);
