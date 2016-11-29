@@ -8,6 +8,7 @@ use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\String\StringConstructor\StringConstructor;
 use Ecma\Types\Objects\String\StringInstance\StringInstance;
+use Ecma\Types\Objects\Arrays\ArrayInstance\ArrayInstance;
 
 class StringPrototype extends HeadObject{
   public function __construct(StringConstructor $constructor, Ecma $ecma){
@@ -19,6 +20,27 @@ class StringPrototype extends HeadObject{
     $this->Put("indexOf", new Property(new Value($ecma, "Object", new StringIndexOf())));
     $this->Put("lastIndexOf", new Property(new Value($ecma, "Object", new StringLastIndexOf())));
     $this->Put("split", new Property(new Value($ecma, "Object", new StringSplit())));
+    $this->Put("substr", new Property(new Value($ecma, "Object", new StringSubStr())));
+  }
+}
+
+class StringSubStr extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg){
+    $string = $obj->ToObject();
+    if(count($arg) < 2){
+      $min = min(max($arg[0]->ToNumber(), 0), strlen($string));
+      $max = strlen($string);
+    }else{
+      $p5 = min(max($arg[0]->ToNumber(), 0), strlen($string));
+      $p6 = min(max($arg[1]->ToNumber(), 0), strlen($string));
+      $min = min($p5, $p6);
+      $max = max($p5, $p6);
+    }
+    $buffer = "";
+    for($i=$min;$i<$max;$i++){
+      $buffer .= $string[$i];
+    }
+    return new Value($obj->ecma, "String", $buffer);
   }
 }
 
