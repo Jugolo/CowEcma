@@ -92,17 +92,6 @@ class Parser{
            return $this->createFunction();
         case "return":
           return $this->getReturn();
-           $line = $this->token->currentToken()->line;
-           $this->token->next();
-           $expresion = $this->expresion();
-           if($this->token->currentToken()->line == $line){
-             if($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != ";"){
-               throw new RuntimeException("Missing ;");
-             }
-             $this->token->next();
-           }
-
-           return new ReturnStatment($expresion);
         case "if":
            return $this->getIf();
         case "while":
