@@ -22,28 +22,6 @@ class ArrayConstructor extends HeadObject implements Call, Constructor{
   }
 
   public function Construct(array $args) : Value{
-    $array = new ArrayInstance($this->ecma, $args);
-    $array->Prototype = $this->proto;
-    $array->Class = "Array";
-    if(count($args) >= 2){
-      $array->length = new Value($this->ecma, "Number", count($args));
-      $array->Put("length", new Property(new Value($this->ecma, "Number", count($args))));
-      for($i=0;$i<count($args);$i++)
-        $array->Put($i, new Property($args[$i]));
-    }elseif(count($args) == 1){
-      if($args[0]->isNumber()){
-        $array->length = $args[0];
-        $array->Put("length", new Property($args[0]));
-      }else{
-        $array->length = new Value($this->ecma, "Number", 1);
-        $array->Put("length", new Property(new Value($this->ecma, "Number", 1)));
-        $array->Put("0", new Property($args[0]));
-      }
-    }else{
-      $array->length = new Value($this->ecma, "Number", 0);
-      $array->Put("length", new Property(new Value($this->ecma, "Number", 0)));
-    }
-    $array->Put("prototype", new Property(new Value($this->ecma, "Object", $this->proto), ["DontEnum", "DontDelete", "ReadOnly"]));
-    return new Value($this->ecma, "Object", $array);
+    return new Value($this->ecma, "Object", new ArrayInstance($this->ecma, $args));
   }
 }
