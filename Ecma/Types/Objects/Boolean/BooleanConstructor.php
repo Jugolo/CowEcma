@@ -7,6 +7,7 @@ use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Value\Value;
 use Ecma\Ecma\Ecma;
 use Ecma\Types\Objects\Boolean\BooleanPrototype\BooleanPrototype;
+use Ecma\Types\Objects\Boolean\BooleanInstance\BooleanInstance;
 use Ecma\Types\Objects\Property\Property;
 
 class BooleanConstructor extends HeadObject implements Call, Constructor{
