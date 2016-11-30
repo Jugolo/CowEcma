@@ -22,7 +22,7 @@ class ArrayConstructor extends HeadObject implements Call, Constructor{
   }
 
   public function Construct(array $args) : Value{
-    $array = new ArrayInstance($this->ecma);
+    $array = new ArrayInstance($this->ecma, $args);
     $array->Prototype = $this->proto;
     $array->Class = "Array";
     if(count($args) >= 2){
