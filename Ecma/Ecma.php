@@ -15,6 +15,7 @@ class Ecma{
   public $globel;
   public $str;
   public $_array;
+  public $_boolean;
   private $context;
 
   public function __construct(){
