@@ -25,4 +25,13 @@ class BooleanConstructor extends HeadObject implements Call, Constructor{
     
     return new Value($obj->ecma, "Boolean", $arg[0]->ToBoolean());
   }
+  
+  public function Construct(array $arg){
+    if($arg == 0)
+      $value = false;
+    else
+      $value = $arg[0]->ToBoolean();
+    
+    return new Value($this->ecma, "Object", new BooleanInstance($this->ecma, $value));
+  }
 }
