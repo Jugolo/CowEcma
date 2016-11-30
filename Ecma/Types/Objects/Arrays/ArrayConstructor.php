@@ -11,11 +11,10 @@ use Ecma\Types\Objects\Arrays\ArrayInstance\ArrayInstance;
 use Ecma\Ecma\Ecma;
 
 class ArrayConstructor extends HeadObject implements Call, Constructor{
-  private $proto;
   protected $ecma;
 
   public function __construct(Ecma $ecma){
-    $this->proto = new ArrayPrototype($this, $ecma);
+    $ecma->_array = new ArrayPrototype($this, $ecma);
     $this->ecma = $ecma;
   }
   public function Call(Value $obj, array $args) : Value{
@@ -23,7 +22,7 @@ class ArrayConstructor extends HeadObject implements Call, Constructor{
   }
 
   public function Construct(array $args) : Value{
-    $array = new ArrayInstance();
+    $array = new ArrayInstance($this->ecma);
     $array->Prototype = $this->proto;
     $array->Class = "Array";
     if(count($args) >= 2){
