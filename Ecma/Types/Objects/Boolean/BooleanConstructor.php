@@ -14,7 +14,7 @@ class BooleanConstructor extends HeadObject implements Call, Constructor{
   
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
-    $ecma->_boolean = new BooleanPrototype($ecma);
+    $ecma->_boolean = new BooleanPrototype($ecma, $this);
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->_boolean)));
   }
   
