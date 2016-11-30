@@ -91,6 +91,7 @@ class Parser{
          case "function":
            return $this->createFunction();
         case "return":
+          return $this->getReturn();
            $line = $this->token->currentToken()->line;
            $this->token->next();
            $expresion = $this->expresion();
@@ -123,6 +124,24 @@ class Parser{
       }
     }
     return $this->expresionStatment();
+  }
+  
+  private function getReturn(){
+    $line = $this->token->currentToken()->line;
+    if($this->token->next()->type != "punctuator" && $this->token->currentToken()->value != ";"){
+      $value = $this->expresion();
+      if($this->token->currentToken()->line == $line){
+        if($this->token->currentToken()->type != "punctuator" && $this->token->currentToken()->value != ";"){
+          throw new \RuntimeExpresion("Missing ;");
+        }
+        $this->token->next();
+      }
+    }else{
+      $value = new NullExpresion();
+      $this->token->next();
+    }
+    
+    return new ReturnStatment($value);
   }
 
   private function getWith(){
