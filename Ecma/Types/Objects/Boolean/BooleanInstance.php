@@ -9,6 +9,9 @@ use Ecma\Types\Objects\HeadObject\HeadObject;
 class BooleanInstance extends HeadObject{
   protected $ecma;
   public function __construct(Ecma $ecma, bool $bool){
+    $this->Prototype = $ecma->_boolean;
+    $this->Class = "Boolean";
+    $this->Value = $bool;
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->_boolean)));
   }
 }
