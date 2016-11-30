@@ -47,14 +47,14 @@ class Parser{
   private $allow_call;
   private $ecma;
 
-  public function __construct($code){
+  public function __construct(string $code){
     $this->reader = new Reader($code);
     $this->token = new TokenCreater($this->reader);
     $this->allow_call = new Stack();
     $this->allow_call->push(true);
   }
 
-  public function parse(Ecma $ecma){
+  public function parse(Ecma $ecma) : Completion{
     $this->ecma = $ecma;
     while($this->token->currentToken()->type != "EOF"){
       $com = $this->parseStatment()->parse($ecma);
