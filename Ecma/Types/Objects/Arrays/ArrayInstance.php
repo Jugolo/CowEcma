@@ -15,6 +15,7 @@ class ArrayInstance extends HeadObject{
     $this->Class = "Array";
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->_array)));
     if(count($args) >= 2){
+      $this->length = new Value($ecma, "Number", 0);
       for($i=0;$i<count($args);$i++){
         $this->Put(strval($i), new Property($args[$i]));
       }
