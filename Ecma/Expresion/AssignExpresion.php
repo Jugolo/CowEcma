@@ -26,10 +26,15 @@ class AssignExpresion implements BaseExpresion{
         return $this->lig($ecma);
        default:
        $first = $this->first->parse($ecma);
+         $second = $this->second->parse($ecma);
+         if($this->arg == "+=" && ($first->GetValue()->isString() || $second->GetValue()->isString())){
+           $first->GetBase()->PutValue(($result = new Value($ecma, "String", $first->GetValue()->ToString().$second->GetValue()->ToString())));
+           return new ExpresionResult($result);
+         }
         $result = Math::math(
             $first->GetValue(),
             substr($this->arg, 0, strlen($this->arg)-1),
-            $this->second->parse($ecma)->GetValue()
+            $second->GetValue()
         );
         $first->GetBase()->PutValue($result);
         return new ExpresionResult($result);
