@@ -24,13 +24,15 @@ class ArrayPrototype extends HeadObject{
 
 class ArraySort implements Call{
   public function Call(Value $obj, array $args) : Value{
+    $ecma = $obj->ecma;
+    $obj = $obj->ToObject();
     $length = $obj->Get("length")->getValue()->ToNumber();
     if($length <= 1){
       return $obj;
     }
 
     if(count($args) == 0){
-      $args[0] = new Value($obj->ecma, "Undefine", null);
+      $args[0] = new Value($ecma, "Undefine", null);
     }
 
     $array = $this->getCleanArray($obj);
@@ -43,7 +45,7 @@ class ArraySort implements Call{
       $obj->Put(strval($i), new Property($array[$i]));
     }
 
-    return new Value($obj->ecma, "Object", $obj);
+    return new Value($ecma, "Object", $obj);
   }
 
   private function getCleanArray($obj) : array{
@@ -78,9 +80,11 @@ class ArraySort implements Call{
 
 class ArrayJoin implements Call{
   public function Call(Value $obj, array $args) : Value{
+    $ecma = $obj->ecma;
+    $obj = $obj->ToObject();
     $length = $obj->Get("length")->getValue()->ToNumber();
     if($length == 0){
-      return new Value($obj->ecma, "String", "");
+      return new Value($ecma, "String", "");
     }
     if(count($args) == 0){
       $sep = ",";
@@ -97,12 +101,14 @@ class ArrayJoin implements Call{
       }
     }
 
-    return new Value($obj->ecma, "String", implode($sep, $str));
+    return new Value($ecma, "String", implode($sep, $str));
   }
 }
 
 class ArrayReverse implements Call{
   public function Call(Value $obj, array $args) : Value{
+    $ecma = $obj->ecma;
+    $obj = $obj->ToObject();
     $len = $obj->Get("length")->getValue()->ToNumber();
     $mid = floor($len / 2);
     $k = 0;
@@ -128,7 +134,7 @@ class ArrayReverse implements Call{
       }
       $k++;
     }
-    return new Value($obj->ecma, "Object", $obj);
+    return new Value($ecma, "Object", $obj);
   }
 }
 

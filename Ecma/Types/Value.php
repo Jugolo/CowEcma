@@ -3,6 +3,7 @@ namespace Ecma\Types\Value;
 
 use Ecma\Token\TokenCreater\TokenCreater;
 use Ecma\Types\Objects\String\StringInstance\StringInstance;
+use Ecma\Types\Objects\Boolean\BooleanInstance\BooleanInstance;
 use Ecma\Reader\Reader;
 use Ecma\Ecma\Ecma;
 
@@ -113,6 +114,8 @@ class Value{
       return new StringInstance($this->ToString(), $this->ecma);
     if($this->isUndefined())
       throw new \RuntimeException("Cant convert Undefined to object");
+    if($this->isBoolean())
+      return new BooleanInstance($this->ecma, $this->ToBoolean());
     exit("Make Value->ToObject('".$this->type."')!!");
   }
 
