@@ -5,7 +5,7 @@ use Ecma\Types\Objects\Boolean\BooleanConstructor\BooleanConstructor;
 use Ecma\Types\Objects\Boolean\BooleanInstance\BooleanInstance;
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Call\Call;
-use Ecma\Types\Object\Property\Property;
+use Ecma\Types\Objects\Property\Property;
 use Ecma\Ecma\Ecma;
 use Ecma\Types\Value\Value;
 
