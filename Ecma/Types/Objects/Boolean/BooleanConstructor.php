@@ -2,7 +2,7 @@
 namespace Ecma\Types\Objects\Boolean\BooleanConstructor;
 
 use Ecma\Types\Objects\Call\Call;
-use Ecma\Types\Objects\Constructor;
+use Ecma\Types\Objects\Constructor\Constructor;
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Value\Value;
 use Ecma\Ecma\Ecma;
@@ -27,7 +27,7 @@ class BooleanConstructor extends HeadObject implements Call, Constructor{
     return new Value($obj->ecma, "Boolean", $arg[0]->ToBoolean());
   }
   
-  public function Construct(array $arg){
+  public function Construct(array $arg) : Value{
     if($arg == 0)
       $value = false;
     else
