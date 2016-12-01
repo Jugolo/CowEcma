@@ -12,6 +12,7 @@ class ArrayInstance extends HeadObject{
   protected $ecma;
   
   public function __construct(Ecma $ecma, array $args){
+    $this->ecma = $ecma;
     $this->Prototype = $ecma->_array;
     $this->Class = "Array";
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->_array)));
