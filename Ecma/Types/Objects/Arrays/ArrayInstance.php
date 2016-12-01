@@ -9,6 +9,7 @@ use Ecma\Ecma\Ecma;
 
 class ArrayInstance extends HeadObject{
   public $length;
+  protected $ecma;
   
   public function __construct(Ecma $ecma, array $args){
     $this->Prototype = $ecma->_array;
