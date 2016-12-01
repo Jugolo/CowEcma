@@ -559,6 +559,7 @@ class Parser{
        $this->token->next();
        $expresion = $this->expresion();
        $this->expect("punctuator", ")");
+       $this->token->next();
        return $expresion;
     }
 
