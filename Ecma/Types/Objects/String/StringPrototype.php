@@ -63,11 +63,11 @@ class StringSplit extends HeadObject implements Call{
     $string = $obj->ToString();
     $split = $arg[0]->ToString();
     $ar = explode($arg[0]->ToString(), $obj->ToString(), empty($arg[1]) || $arg[1]->isUndefined() ? PHP_INT_MAX : $arg[1]->ToNumber());
-    $array = new ArrayInstance();
+    $buffer = [];
     for($i=0;$i<count($ar);$i++){
-      $array->Put(strval($i), new Property(new Value($obj->ecma, "String", $ar[$i])));
+      $buffer[] = new Value($obj->ecma, "String", $ar[$i]);
     }
-    return new Value($obj->ecma, "Object", $array);
+    return new Value($obj->ecma, "Object", new ArrayInstance($obj->ecma, $buffer));
   }
 }
 

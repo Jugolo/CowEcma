@@ -16,7 +16,7 @@ class StringConstructor extends HeadObject implements Call, Constructor{
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
     $this->Prototype = $ecma->str = new StringPrototype($this, $ecma);
-    
+    $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->str)));
     $this->Put("fromCharCode", new Property(new Value($ecma, "Object", new StringFromCharCode())));
   }
   
