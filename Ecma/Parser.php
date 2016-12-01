@@ -47,14 +47,14 @@ class Parser{
   private $allow_call;
   private $ecma;
 
-  public function __construct($code){
+  public function __construct(string $code){
     $this->reader = new Reader($code);
     $this->token = new TokenCreater($this->reader);
     $this->allow_call = new Stack();
     $this->allow_call->push(true);
   }
 
-  public function parse(Ecma $ecma){
+  public function parse(Ecma $ecma) : Completion{
     $this->ecma = $ecma;
     while($this->token->currentToken()->type != "EOF"){
       $com = $this->parseStatment()->parse($ecma);
@@ -91,17 +91,7 @@ class Parser{
          case "function":
            return $this->createFunction();
         case "return":
-           $line = $this->token->currentToken()->line;
-           $this->token->next();
-           $expresion = $this->expresion();
-           if($this->token->currentToken()->line == $line){
-             if($this->token->currentToken()->type != "punctuator" || $this->token->currentToken()->value != ";"){
-               throw new RuntimeException("Missing ;");
-             }
-             $this->token->next();
-           }
-
-           return new ReturnStatment($expresion);
+          return $this->getReturn();
         case "if":
            return $this->getIf();
         case "while":
@@ -123,6 +113,24 @@ class Parser{
       }
     }
     return $this->expresionStatment();
+  }
+  
+  private function getReturn(){
+    $line = $this->token->currentToken()->line;
+    if($this->token->next()->type != "punctuator" && $this->token->currentToken()->value != ";"){
+      $value = $this->expresion();
+      if($this->token->currentToken()->line == $line){
+        if($this->token->currentToken()->type != "punctuator" && $this->token->currentToken()->value != ";"){
+          throw new \RuntimeExpresion("Missing ;");
+        }
+        $this->token->next();
+      }
+    }else{
+      $value = new NullExpresion();
+      $this->token->next();
+    }
+    
+    return new ReturnStatment($value);
   }
 
   private function getWith(){
