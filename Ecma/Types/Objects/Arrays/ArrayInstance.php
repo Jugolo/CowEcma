@@ -50,6 +50,7 @@ class ArrayInstance extends HeadObject{
            if (is_numeric($propertyname)) {
                if ($propertyname >= $this->length->ToNumber()) {
                    $this->length = new Value($this->ecma, "Number", $propertyname+1);
+                   parent::Put("length", new Property($this->length));
                }
            }
            return parent::Put($propertyname, $value);
