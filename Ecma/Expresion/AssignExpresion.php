@@ -8,6 +8,7 @@ use Ecma\Types\Objects\Property\Property;
 use Ecma\Expresion\ExpresionResult\ExpresionResult;
 use Ecma\Expresion\IdentifyExpresion\IdentifyExpresion;
 use Ecma\Math\Math;
+use Ecma\Types\Value\Value;
 
 class AssignExpresion implements BaseExpresion{
   private $first;
