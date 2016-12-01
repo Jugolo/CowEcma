@@ -25,7 +25,7 @@ class ArrayInstance extends HeadObject{
       if($args[0]->isNumber()){
         $this->Put("length", new Property($args[0]));
       }else{
-        parent::Put("0", new Property($arg[0]));
+        parent::Put("0", new Property($args[0]));
         parent::Put("length", new Property(new Value($ecma, "Number", 1)));
         $this->length = new Value($ecma, "Number", 1);
       }
