@@ -17,6 +17,11 @@ class NumberConstructor extends HeadObject implements Call, Constructor{
     $this->ecma = $ecma;
     
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->number)));
+    $this->Put("MAX_VALUE", new Property(new Value($ecma, "Number", PHP_INT_MAX)));
+    $this->Put("MIN_VALUE", new Property(new Value($ecma, "Number", PHP_INT_MIN)));
+    $this->Put("NaN", new Property(new Value($ecma, "Number", acos(8))));
+    $this->Put("NEGATIVE_INFINITY", new Property(new Value($ecma, "Number", -INF)));
+    $this->Put("POSITIVE_INFINITY", new Property(new Value($ecma, "Number", INF)));
   }
   
   public function Call(Value $value, array $arg) : Value{
