@@ -13,7 +13,7 @@ class NumberConstructor extends HeadObject implements Call, Constructor{
   protected $ecma;
   
   public function __construct(Ecma $ecma){
-    $ecma->number = new NumberPrototype($ecma);
+    $ecma->number = new NumberPrototype($ecma, $this);
     $this->ecma = $ecma;
     
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->number)));
