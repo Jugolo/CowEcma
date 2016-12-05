@@ -2,6 +2,7 @@
 namespace Ecma\Types\Objects\Number\NumberPrototype;
 
 use Ecma\Types\Objects\Number\NumberConstructor\NumberConstructor;
+use Ecma\Types\Objects\Number\NumberInstance\NumberInstance;
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Objects\Call\Call;
@@ -24,12 +25,16 @@ class NumberPrototype extends HeadObject{
 
 class NumberValueOf extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
+    if(!($obj->ToObject() instanceof NumberInstance))
+      throw new \RuntimeException("Number.valueOf method must be in a number instance");
     return new Value($obj->value, "Number", $obj->ToNumber());
   }
 }
 
 class NumberToString extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
+    if(!($obj->ToObject() instanceof NumberInstance))
+      throw new \RuntimeException("Number.toString must be in a number object");
     if(count($arg) == 0 || $arg[0]->ToNumber() == 10)
       return new Value($obj->ecma, "String", $obj->ToString());
     
