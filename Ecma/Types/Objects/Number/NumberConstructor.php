@@ -33,7 +33,7 @@ class NumberConstructor extends HeadObject implements Call, Constructor{
     return new Value($obj->ecma, "Number", $number);
   }
   
-  public function Construct(array $arg){
+  public function Construct(array $arg) : Value{
     return new NumberInstance($this->ecma, count($arg) < 1 ? 0 : $arg[0]->ToNumber());
   }
 }
