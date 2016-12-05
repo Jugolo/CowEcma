@@ -38,6 +38,6 @@ class NumberToString extends HeadObject implements Call{
     if(count($arg) == 0 || $arg[0]->ToNumber() == 10)
       return new Value($obj->ecma, "String", $obj->ToString());
     
-    return new Value($obj->ecma, "String", base_convert($arg[0]->ToNumber());
+    return new Value($obj->ecma, "String", base_convert($arg[0]->ToNumber()));
   }
 }
