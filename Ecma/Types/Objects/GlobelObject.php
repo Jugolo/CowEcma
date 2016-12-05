@@ -12,7 +12,7 @@ use Ecma\Types\Objects\Arrays\ArrayConstructor\ArrayConstructor;
 use Ecma\Ecma\Ecma;
 use Ecma\Types\Objects\GlobelObject\Functions\Functions;
 use Ecma\Types\Objects\String\StringConstructor\StringConstructor;
-use Ecma\Types\Objects\Number\NumberConstruct\NumberConstructor;
+use Ecma\Types\Objects\Number\NumberConstructor\NumberConstructor;
 use Ecma\Types\Objects\Boolean\BooleanConstructor\BooleanConstructor;
 
 class GlobelObject extends HeadObject{
