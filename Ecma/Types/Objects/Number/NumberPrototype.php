@@ -15,7 +15,7 @@ class NumberPrototype extends HeadObject{
   public function __construct(Ecma $ecma, NumberConstructor $constructor){
     $this->ecma = $ecma;
     $this->Class = "Number";
-    $this->Prototype = $ecma->object->Get("prototype")->GetValue();
+    $this->Prototype = $ecma->object->Get("prototype")->GetValue()->ToObject();
     
     $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
     $this->Put("toString", new Property(new Value($ecma, "Object", new NumberToString())));
