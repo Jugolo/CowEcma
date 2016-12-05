@@ -13,6 +13,23 @@ class Math extends HeadObject{
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
     $this->Put("abs", new Property(new Value($ecma, "Object", new MathAbs())));
+    $this->Put("acos", new Property(new Value($ecma, "Object", new MathAcos())));
+  }
+}
+
+class MathAcos extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $number = $arg[0]->ToNumber();
+    if(is_nan($number))
+      return $arg[0];
+    
+    if($number > 1 || $number < -1)
+      return new Value($obj->ecma, "Number", acos(8));
+    
+    if($number == 1)
+      return new Value($obj->ecma, "Number", 0);
+    
+    return new Value($obj->ecma, "Number", acos($number));
   }
 }
 
