@@ -14,6 +14,7 @@ class Ecma{
   public $object;
   public $globel;
   public $str;
+  public $number;
   public $_array;
   public $_boolean;
   private $context;
