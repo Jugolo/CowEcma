@@ -46,7 +46,7 @@ class HeadObject implements HeadObjectDelete{
   }
 
   public function CanPut($propertyname){
-    if($this->HasProperty($propertyname) && $this->propertys[$propertyname]->hasAttribute("ReadOnly"))
+    if(!empty($this->propertys[$propertyname]) && $this->propertys[$propertyname]->hasAttribute("ReadOnly"))
         return false;
 
     if($this->Prototype === null)
