@@ -1,4 +1,4 @@
-<?php
+<?php 
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());
