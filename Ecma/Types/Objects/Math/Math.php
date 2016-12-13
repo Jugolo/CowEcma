@@ -12,16 +12,28 @@ class Math extends HeadObject{
   
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
-    $this->Put("abs", new Property(new Value($ecma, "Object", new MathAbs())));
-    $this->Put("acos", new Property(new Value($ecma, "Object", new MathAcos())));
-    $this->Put("asin", new Property(new Value($ecma, "Object", new MathAsin())));
-    $this->Put("atan", new Property(new Value($ecma, "Object", new MathAtan())));
+    $this->Put("abs",   new Property(new Value($ecma, "Object", new MathAbs())));
+    $this->Put("acos",  new Property(new Value($ecma, "Object", new MathAcos())));
+    $this->Put("asin",  new Property(new Value($ecma, "Object", new MathAsin())));
+    $this->Put("atan",  new Property(new Value($ecma, "Object", new MathAtan())));
     $this->Put("atan2", new Property(new Value($ecma, "Object", new MathAtan2())));
+    $this->Put("ceil",  new Property(new Value($ecma, "Object", new MathCeil())));
+    $this->Put("cos",   new Property(new Value($ecma, "Object", new MathCos())));
+  }
+}
+
+class MathCos extends HeadObject implements Call{
+  
+}
+
+class MathCeil extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", ceil($arg[0]->ToNumber()));
   }
 }
 
 class MathAtan2 extends HeadObject implements Call{
-  public function Call(Value $obj, array $arg){
+  public function Call(Value $obj, array $arg) : Value{
     $y = $arg[0]->ToNumber();
     $x = $arg[1]->ToNumber();
     
@@ -39,7 +51,9 @@ class MathAtan2 extends HeadObject implements Call{
       return new Value($obj->ecma, "Number", M_PI);
     
     if($y == 0 && $x > 0)
-      return new Value($obj->ecma, "Number", 
+      return new Value($obj->ecma, "Number", 0);
+    
+    return new Value($obj->ecma, "Number", atan2($y, $x));
   }
 }
 
