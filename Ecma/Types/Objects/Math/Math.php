@@ -16,6 +16,30 @@ class Math extends HeadObject{
     $this->Put("acos", new Property(new Value($ecma, "Object", new MathAcos())));
     $this->Put("asin", new Property(new Value($ecma, "Object", new MathAsin())));
     $this->Put("atan", new Property(new Value($ecma, "Object", new MathAtan())));
+    $this->Put("atan2", new Property(new Value($ecma, "Object", new MathAtan2())));
+  }
+}
+
+class MathAtan2 extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg){
+    $y = $arg[0]->ToNumber();
+    $x = $arg[1]->ToNumber();
+    
+    if(is_nan($y) || is_nan($x))
+       return new Value($obj->ecma, "Number", acos(8));
+    
+    if($y > 0 && $x == 0){
+      return new Value($obj->ecma, "Number", M_PI/2);
+    }
+    
+    if($y == 0 && $x == 0)
+      return new Value($obj->ecma, "Number", 0);
+    
+    if($y == 0 && $x < 0)
+      return new Value($obj->ecma, "Number", M_PI);
+    
+    if($y == 0 && $x > 0)
+      return new Value($obj->ecma, "Number", 
   }
 }
 
