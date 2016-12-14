@@ -1,4 +1,4 @@
-<?php
+<?php 
 namespace Ecma\Types\Objects\Functions\FunctionInstance;
 
 use Ecma\Types\Value\Value;
