@@ -17,6 +17,29 @@ class DatePrototype extends HeadObject{
     $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
     $this->Put("toString",    new Property(new Value($ecma, "Object", new DateToString())));
     $this->Put("valueOf",     new Property(new Value($ecma, "Object", new DateValueOf())));
+    $this->Put("getTime",     new Property(new Value($ecma, "Object", new DateGetTime())));
+    $this->Put("getYear",     new Property(new Value($ecma, "Object", new DateGetYear())));
+  }
+}
+
+class DateGetYear extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    if(is_nan($value))
+      return new Value($obj->ecma, "Number", $value);
+    
+    return new Value($obj->ecma, "Number", YearFromTime(LocalTime($value)) - 1900;
+  }
+}
+
+class DateGetTime extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $o = $obj->ToObject();
+    
+    if($o->Class != "Date")
+      throw new RuntimeException("getTime must be method of Date class");
+    
+    return new Value($obj->ecma, "Number", $o->Value);
   }
 }
 
@@ -26,7 +49,7 @@ class DateValueOf extends HeadObject implements Call{
     if(!($o instanceof DateInstance))
       throw new RuntimeException("Date.valueOf method should be method of Date instance");
     
-    return new Value($obj->ecma, "Object", $o->Value);
+    return new Value($obj->ecma, "Number", $o->Value);
   }
 }
 
@@ -45,4 +68,21 @@ class DateToString extends HeadObject implements Call{
     $str .= $o->Get("getSeconds")->GetValue()->Call($obj, [])->ToString();
     return new Value($obj->ecma, "String", $str);
   }
+}
+                     
+function DayFromYear(int $y) : int{
+    return 365 * ($y-1970) + floor(($y-1969)/4) - floor(($y-1901)/100) + floor(($y-1601)/400);
+}
+                     
+function TimeFromYear(int $y){
+    return 86400000*DayFromYear($y);
+}
+                     
+function YearFromTime(int $y) : int{
+    return TimeFromYear($y);
+}
+
+function LocalTime(int $t) : int{
+    $localtza = 0;
+    return $t + $localtza + DaylightSavingTA($t);
 }
