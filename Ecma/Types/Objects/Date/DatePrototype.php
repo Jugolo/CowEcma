@@ -5,6 +5,7 @@ use Ecma\Types\Objects\HeadObject;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Objects\Date\DateConstructor\DateConstructor;
+use Ecma\Types\Objects\Date\DateInstance\DateInstance;
 use Ecma\Types\Value\Value;
 use Ecma\Ecma\Ecma;
 
@@ -21,5 +22,10 @@ class DatePrototype extends HeadObject{
 class DateToString extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
     $o = $obj->ToObject();
+    if(!($o instanceof DateInstance)){
+      throw new \RuntimeException("Date.toString method should be method of Date instance");
+    }
+    
+    
   }
 }
