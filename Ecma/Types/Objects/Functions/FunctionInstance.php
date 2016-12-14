@@ -35,7 +35,7 @@ class FunctionInstance extends HeadObject implements Constructor, Call{
 
   public function Call(Value $obj, array $args) : Value{
      if(!$obj->isObject()){
-       $obj = new Value($obj->ecma, "Object", $obj->globel);
+       $obj = new Value($obj->ecma, "Object", $obj->ecma->globel);
      }
      $activation = new HeadObject();
      $agument = new HeadObject();
