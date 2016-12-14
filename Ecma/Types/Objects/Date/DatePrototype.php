@@ -19,6 +19,17 @@ class DatePrototype extends HeadObject{
     $this->Put("valueOf",     new Property(new Value($ecma, "Object", new DateValueOf())));
     $this->Put("getTime",     new Property(new Value($ecma, "Object", new DateGetTime())));
     $this->Put("getYear",     new Property(new Value($ecma, "Object", new DateGetYear())));
+    $this->Put("getFullYear", new Property(new Value($ecma, "Object", new DateGetFullYear())));
+  }
+}
+
+class DateGetFullYear extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    if(is_nan($value))
+      return new Value($obj->ecma, "Number", $value);
+    
+    return new Value($obj->ecma, "Number", YearFromTime(EcmaLocalTime($value)));
   }
 }
 
@@ -28,7 +39,7 @@ class DateGetYear extends HeadObject implements Call{
     if(is_nan($value))
       return new Value($obj->ecma, "Number", $value);
     
-    return new Value($obj->ecma, "Number", YearFromTime(EcmaLocalTime($value)) - 1900;
+    return new Value($obj->ecma, "Number", YearFromTime(EcmaLocalTime($value)) - 1900);
   }
 }
 
