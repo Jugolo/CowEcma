@@ -16,6 +16,17 @@ class DatePrototype extends HeadObject{
     $this->ecma = $ecma;
     $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
     $this->Put("toString",    new Property(new Value($ecma, "Object", new DateToString())));
+    $this->Put("valueOf",     new Property(new Value($ecma, "Object", new DateValueOf())));
+  }
+}
+
+class DateValueOf extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $o = $obj->ToObject();
+    if(!($o instanceof DateInstance))
+      throw new RuntimeException("Date.valueOf method should be method of Date instance");
+    
+    return new Value($obj->ecma, "Object", $o->Value);
   }
 }
 
