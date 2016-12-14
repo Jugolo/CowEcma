@@ -28,7 +28,7 @@ class DateGetYear extends HeadObject implements Call{
     if(is_nan($value))
       return new Value($obj->ecma, "Number", $value);
     
-    return new Value($obj->ecma, "Number", YearFromTime(LocalTime($value)) - 1900;
+    return new Value($obj->ecma, "Number", YearFromTime(EcmaLocalTime($value)) - 1900;
   }
 }
 
@@ -82,7 +82,7 @@ function YearFromTime(int $y) : int{
     return TimeFromYear($y);
 }
 
-function LocalTime(int $t) : int{
+function EcmaLocalTime(int $t) : int{
     $localtza = 0;
     return $t + $localtza + DaylightSavingTA($t);
 }
