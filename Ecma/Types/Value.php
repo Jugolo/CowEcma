@@ -118,7 +118,7 @@ class Value{
     if($this->isBoolean())
       return new BooleanInstance($this->ecma, $this->ToBoolean());
     if($this->isNumber())
-      return new NumberInstance($this->ecma, $this->ToNumber));
+      return new NumberInstance($this->ecma, $this->ToNumber());
     exit("Make Value->ToObject('".$this->type."')!!");
   }
 
