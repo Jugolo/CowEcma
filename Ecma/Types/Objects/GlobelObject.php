@@ -14,6 +14,7 @@ use Ecma\Types\Objects\GlobelObject\Functions\Functions;
 use Ecma\Types\Objects\String\StringConstructor\StringConstructor;
 use Ecma\Types\Objects\Number\NumberConstructor\NumberConstructor;
 use Ecma\Types\Objects\Boolean\BooleanConstructor\BooleanConstructor;
+use Ecma\Types\Objects\Math\Math\Math;
 
 class GlobelObject extends HeadObject{
   public function __construct(Ecma $ecma){
@@ -25,7 +26,8 @@ class GlobelObject extends HeadObject{
     $this->Put("Function", new Property(new Value($ecma, "Object", new FunctionConstructor($ecma))));
     $this->Put("String", new Property(new Value($ecma, "Object", new StringConstructor($ecma))));
     $this->Put("Boolean", new Property(new Value($ecma, "Object", new BooleanConstructor($ecma))));
-    $this->Put("Number", new Property(new Value($ecma, "Number", new NumberConstructor($ecma))));
+    $this->Put("Number", new Property(new Value($ecma, "Object", new NumberConstructor($ecma))));
+    $this->Put("Math", new Property(new Value($ecma, "Object", new Math($ecma))));
     new Functions($this, $ecma);
   }
 }
