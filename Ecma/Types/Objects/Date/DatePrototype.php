@@ -26,6 +26,12 @@ class DateToString extends HeadObject implements Call{
       throw new \RuntimeException("Date.toString method should be method of Date instance");
     }
     
-    
+    $str  = $o->Get("getDate")->GetValue()->Call($obj, [])->ToString()."/";
+    $str .= $o->Get("getMonth")->GetValue()->Call($obj, [])->ToString()."/";
+    $str .= $o->Get("getYear")->GetValue()->Call($obj, [])->ToString()." ";
+    $str .= $o->Get("getHours")->GetValue()->Call($obj, [])->ToString().":";
+    $str .= $o->Get("getMinutes")->GetValue()->Call($obj, [])->ToString().":";
+    $str .= $o->Get("getSeconds")->GetValue()->Call($obj, [])->ToString();
+    return new Value($obj->ecma, "String", $str);
   }
 }
