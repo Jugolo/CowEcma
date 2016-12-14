@@ -25,12 +25,47 @@ class Math extends HeadObject{
     $this->Put("max",   new Property(new Value($ecma, "Object", new MathMax())));
     $this->Put("min",   new Property(new Value($ecma, "Object", new MathMin())));
     $this->Put("pow",   new Property(new Value($ecma, "Object", new MathPow())));
+    $this->Put("random" new Property(new Value($ecma, "Object", new MathRandom())));
+    $this->Put("round"  new Property(new Value($ecma, "Object", new MathRound())));
+    $this->Pit("sin",   new Property(new Value($ecma, "Object", new MathSin())));
+    $this->Put("sqrt",  new Property(new Value($ecma, "Object", new MathSqrt())));
+    $this->Put("tan",   new Property(new Value($ecma, "Object", new MathTan())));
+  }
+}
+
+class MathTan extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", tan($arg[0]->ToNumber()));
+  }
+}
+
+class MathSqrt extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", sqrt($arg[0]->ToNumber()));
+  }
+}
+
+class MathSin extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", sin($arg[0]->ToNumber()));
+  }
+}
+
+class MathRound extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", round($arg[0]->ToNumber()));
+  }
+}
+
+class MathRandom extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", rand(0, 1));
   }
 }
 
 class MathPow extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
-    return new Value($obj->ecma, "Object", pow($arg[0]->ToNumber()));
+    return new Value($obj->ecma, "Number", pow($arg[0]->ToNumber()));
   }
 }
 
