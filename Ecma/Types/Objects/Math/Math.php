@@ -19,11 +19,55 @@ class Math extends HeadObject{
     $this->Put("atan2", new Property(new Value($ecma, "Object", new MathAtan2())));
     $this->Put("ceil",  new Property(new Value($ecma, "Object", new MathCeil())));
     $this->Put("cos",   new Property(new Value($ecma, "Object", new MathCos())));
+    $this->Put("exp",   new Property(new Value($ecma, "Object", new MathExp())));
+    $this->Put("floor", new Property(new Value($ecma, "Object", new MathFloor())));
+    $this->Put("log",   new Property(new Value($ecma, "Object", new MathLog())));
+    $this->Put("max",   new Property(new Value($ecma, "Object", new MathMax())));
+    $this->Put("min",   new Property(new Value($ecma, "Object", new MathMin())));
+    $this->Put("pow",   new Property(new Value($ecma, "Object", new MathPow())));
+  }
+}
+
+class MathPow extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    
+  }
+}
+
+class MathMin extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", min($arg[0]->ToNumber(), $arg[1]->ToNumber()));
+  }
+}
+
+class MathMax extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", max($arg[0]->ToNumber(), $arg[1]->ToNumber()));
+  }
+}
+
+class MathLog extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", log($arg[0]->ToNumber()));
+  }
+}
+
+class MathFloor extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", floor($arg[0]->ToNumber()));
+  }
+}
+
+class MathExp extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", exp($arg[0]->ToNumber()));
   }
 }
 
 class MathCos extends HeadObject implements Call{
-  
+  public function Call(Value $obj, array $arg) : Value{
+    return new Value($obj->ecma, "Number", cos($arg[0]->ToNumber()));
+  }
 }
 
 class MathCeil extends HeadObject implements Call{
