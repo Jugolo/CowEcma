@@ -14,12 +14,33 @@ class DatePrototype extends HeadObject{
   
   public function __construct(Ecma $ecma, DateConstructor $constructor){
     $this->ecma = $ecma;
-    $this->Put("constructor", new Property(new Value($ecma, "Object", $constructor)));
-    $this->Put("toString",    new Property(new Value($ecma, "Object", new DateToString())));
-    $this->Put("valueOf",     new Property(new Value($ecma, "Object", new DateValueOf())));
-    $this->Put("getTime",     new Property(new Value($ecma, "Object", new DateGetTime())));
-    $this->Put("getYear",     new Property(new Value($ecma, "Object", new DateGetYear())));
-    $this->Put("getFullYear", new Property(new Value($ecma, "Object", new DateGetFullYear())));
+    $this->Put("constructor",    new Property(new Value($ecma, "Object", $constructor)));
+    $this->Put("toString",       new Property(new Value($ecma, "Object", new DateToString())));
+    $this->Put("valueOf",        new Property(new Value($ecma, "Object", new DateValueOf())));
+    $this->Put("getTime",        new Property(new Value($ecma, "Object", new DateGetTime())));
+    $this->Put("getYear",        new Property(new Value($ecma, "Object", new DateGetYear())));
+    $this->Put("getFullYear",    new Property(new Value($ecma, "Object", new DateGetFullYear())));
+    $this->Put("getUTCFullYear", new Property(new Value($ecma, "Object", new DateGetUTCFullYear())));
+    $this->Put("getMonth",       new Property(new Value($ecma, "Object", new DateGetMonth())));
+  }
+}
+
+class DateGetMonth extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    if(is_nan($value))
+      return new Value($obj->ecma, "Number", $value);
+    return new Value($obj->ecma, "Number", MonthFromTime(EcmaLocalTime($value)));
+  }
+}
+
+class DateGetUTCFullYear extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    if(is_nan($value))
+      return new Value($obj->ecma, "Number", $value);
+    
+    return new Value($obj->ecma, "Number", YearFromTime($value));
   }
 }
 
@@ -80,6 +101,21 @@ class DateToString extends HeadObject implements Call{
     return new Value($obj->ecma, "String", $str);
   }
 }
+
+function MonthFromTime(int $t) : int{
+  $i = DayWithinYear($t);
+  $o = InLeapYear($t);
+  if($i > 0 && $i < 31)
+    return 0;
+  if($i > 31 && $i < 59+$o)
+    return 1;
+  if($i > 59+$o && $i < 90+$o)
+    return 2;
+  if($i > 90+$o && $i < 120+$o)
+    return 3;
+  if($i > 120+$o && $i < 151+$o)
+    return 4;
+}
                      
 function DayFromYear(int $y) : int{
     return 365 * ($y-1970) + floor(($y-1969)/4) - floor(($y-1901)/100) + floor(($y-1601)/400);
@@ -96,4 +132,8 @@ function YearFromTime(int $y) : int{
 function EcmaLocalTime(int $t) : int{
     $localtza = 0;
     return $t + $localtza + DaylightSavingTA($t);
+}
+
+function DaylightSavingTA($t){
+  return 0;
 }
