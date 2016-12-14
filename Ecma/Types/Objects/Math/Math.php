@@ -27,7 +27,7 @@ class Math extends HeadObject{
     $this->Put("pow",    new Property(new Value($ecma, "Object", new MathPow())));
     $this->Put("random", new Property(new Value($ecma, "Object", new MathRandom())));
     $this->Put("round",  new Property(new Value($ecma, "Object", new MathRound())));
-    $this->Pit("sin",    new Property(new Value($ecma, "Object", new MathSin())));
+    $this->Put("sin",    new Property(new Value($ecma, "Object", new MathSin())));
     $this->Put("sqrt",   new Property(new Value($ecma, "Object", new MathSqrt())));
     $this->Put("tan",    new Property(new Value($ecma, "Object", new MathTan())));
   }
