@@ -30,7 +30,7 @@ class Math extends HeadObject{
 
 class MathPow extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
-    
+    return new Value($obj->ecma, "Object", pow($arg[0]->ToNumber()));
   }
 }
 
