@@ -125,7 +125,7 @@ function TimeFromYear(int $y){
     return 86400000*DayFromYear($y);
 }
                      
-function YearFromTime(int $y) : int{
+function YearFromTime(int $y) : float{
     return TimeFromYear($y);
 }
 
