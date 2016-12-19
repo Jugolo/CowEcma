@@ -156,3 +156,40 @@ function DaylightSavingTA($t){
 function EcmaTime(){
   return time()*1000;
 }
+function Day(int $t) : int{
+  return floor($t / msPerDay);
+}
+
+function MonthFromTime($t) : int{
+   $year = YearFromTime($t);
+   $d = Day($t) - DayFromYear($year);
+
+   $d -= 31 + 28;
+   if($d < 0){
+      return ($d < -28) ? 0 : 1;
+   }
+
+   if(IsLeapYear($year)){
+      if($d == 0)
+          return 1; // 29 February
+            $d--;
+   }
+
+   // d: date count from 1 March
+   $estimate = $d / 30; // approx number of month since March
+   switch ($estimate) {
+            case 0: return 2;
+            case 1: $mstart = 31; break;
+            case 2: $mstart = 31+30; break;
+            case 3: $mstart = 31+30+31; break;
+            case 4: $mstart = 31+30+31+30; break;
+            case 5: $mstart = 31+30+31+30+31; break;
+            case 6: $mstart = 31+30+31+30+31+31; break;
+            case 7: $mstart = 31+30+31+30+31+31+30; break;
+            case 8: $mstart = 31+30+31+30+31+31+30+31; break;
+            case 9: $mstart = 31+30+31+30+31+31+30+31+30; break;
+            case 10: return 11; //Late december
+        }
+        // if d < mstart then real month since March == estimate - 1
+        return ($d >= $mstart) ? $estimate + 2 : $estimate + 1;
+}
