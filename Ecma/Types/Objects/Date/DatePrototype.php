@@ -22,6 +22,16 @@ class DatePrototype extends HeadObject{
     $this->Put("getFullYear",    new Property(new Value($ecma, "Object", new DateGetFullYear())));
     $this->Put("getUTCFullYear", new Property(new Value($ecma, "Object", new DateGetUTCFullYear())));
     $this->Put("getMonth",       new Property(new Value($ecma, "Object", new DateGetMonth())));
+    $this->Put("getUTCMonth",    new Property(new Value($ecma, "Object", new DateGetUTCMonth())));
+  }
+}
+
+class DateGetUTCMonth extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    if(is_nan($value))
+      return new Value($obj->ecma, "Number", $value);
+    return new Value($obj->ecma, "Number", MonthFromTime($value));
   }
 }
 
