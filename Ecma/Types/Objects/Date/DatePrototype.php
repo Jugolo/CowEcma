@@ -31,6 +31,26 @@ class DatePrototype extends HeadObject{
     $this->Put("getUTCHours",    new Property(new Value($ecma, "Object", new DateGetUTCHours())));
     $this->Put("getMinutes",     new Property(new Value($ecma, "Object", new DateGetMinutes())));
     $this->Put("getUTCMinutes",  new Property(new Value($ecma, "Object", new DateGetUTCMinutes())));
+    $this->put("getSeconds",     new Property(new Value($ecma, "Object", new DateGetSeconds())));
+    $this->Put("getUTCSeconds",  new Property(new Value($ecma, "Object", new DateGetUTCSeconds())));
+  }
+}
+
+class DateGetUTCSeconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", SecFromTime($t));
+  }
+}
+
+class DateGetSeconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj, "Number", SecFromTime(EcmaLocalTime($t)));
   }
 }
 
@@ -336,4 +356,8 @@ function HourFromTime(int $t) : int{
 
 function MinFromTime(int $t) : int{
   return floor($t / msPerMinute) % MinutesPerHour;
+}
+
+function SecFromTime(int $t) : int{
+  return floor($t / msPerSecond) % SecondsPerMinute;
 }
