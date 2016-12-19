@@ -23,6 +23,27 @@ class DatePrototype extends HeadObject{
     $this->Put("getUTCFullYear", new Property(new Value($ecma, "Object", new DateGetUTCFullYear())));
     $this->Put("getMonth",       new Property(new Value($ecma, "Object", new DateGetMonth())));
     $this->Put("getUTCMonth",    new Property(new Value($ecma, "Object", new DateGetUTCMonth())));
+    $this->Put("getDate",        new Property(new Value($ecma, "Object", new DateGetDate())));
+    $this->Put("getUTCDate",     new Property(new Value($ecma, "Object", new DateGetUTCDate())));
+  }
+}
+
+class DateGetUTCDate extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    
+    return new Value($obj->ecma, "Number", DateFromTime($t));
+  }
+}
+
+class DateGetDate extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", DateFromTime(EcmaLocalTime($t)));
   }
 }
 
@@ -202,4 +223,40 @@ function MonthFromTime($t) : int{
         }
         // if d < mstart then real month since March == estimate - 1
         return ($d >= $mstart) ? $estimate + 2 : $estimate + 1;
+}
+
+function DateFromTime($t){
+   $year = YearFromTime($t);
+   $d = Day($t) - DayFromYear($year);
+
+   $d -= 31 + 28;
+   if($d < 0){
+      return ($d < -28) ? $d + 31 + 28 + 1 : $d + 28 + 1;
+   }
+
+   if(IsLeapYear($year)) {
+      if($d == 0)
+          return 29; // 29 February
+            $d--;
+   }
+   // d: date count from 1 March
+   switch(round($d / 30)) { // approx number of month since March
+        case 0: return $d + 1;
+        case 1: $mdays = 31; $mstart = 31; break;
+        case 2: $mdays = 30; $mstart = 31+30; break;
+        case 3: $mdays = 31; $mstart = 31+30+31; break;
+        case 4: $mdays = 30; $mstart = 31+30+31+30; break;
+        case 5: $mdays = 31; $mstart = 31+30+31+30+31; break;
+        case 6: $mdays = 31; $mstart = 31+30+31+30+31+31; break;
+        case 7: $mdays = 30; $mstart = 31+30+31+30+31+31+30; break;
+        case 8: $mdays = 31; $mstart = 31+30+31+30+31+31+30+31; break;
+        case 9: $mdays = 30; $mstart = 31+30+31+30+31+31+30+31+30; break;
+        case 10: return $d - (31+30+31+30+31+31+30+31+30) + 1; //Late december
+        }
+        $d -= $mstart;
+        if ($d < 0) {
+            // wrong estimate: sfhift to previous month
+            $d += $mdays;
+        }
+        return $d + 1;
 }
