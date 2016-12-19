@@ -27,6 +27,26 @@ class DatePrototype extends HeadObject{
     $this->Put("getUTCDate",     new Property(new Value($ecma, "Object", new DateGetUTCDate())));
     $this->Put("getDay",         new Property(new Value($ecma, "Object", new DateGetDay())));
     $this->Put("getUTCDay",      new Property(new Value($ecma, "Object", new DateGetUTCDay())));
+    $this->Put("getHours",       new Property(new Value($ecma, "Object", new DateGetHours())));
+    $this->Put("getUTCHours",    new Property(new Value($ecma, "Object", new DateGetUTCHours())));
+  }
+}
+
+class DateGetUTCHours extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", HourFromTime($t));
+  }
+}
+
+class DateGetHours extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", HourFromTime(EcmaLocalTime($t)));
   }
 }
 
@@ -287,4 +307,8 @@ function WeekDay(int $t) : int{
    if($result < 0)
      $result += 7;
     return $result;
+}
+
+function HourFromTime(int $t) : int{
+  return floor($t / msPerHour) % HoursPerDay;
 }
