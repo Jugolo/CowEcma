@@ -25,6 +25,26 @@ class DatePrototype extends HeadObject{
     $this->Put("getUTCMonth",    new Property(new Value($ecma, "Object", new DateGetUTCMonth())));
     $this->Put("getDate",        new Property(new Value($ecma, "Object", new DateGetDate())));
     $this->Put("getUTCDate",     new Property(new Value($ecma, "Object", new DateGetUTCDate())));
+    $this->Put("getDay",         new Property(new Value($ecma, "Object", new DateGetDay())));
+    $this->Put("getUTCDay",      new Property(new Value($ecma, "Object", new DateGetUTCDay())));
+  }
+}
+
+class DateGetUTCDay extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", WeekDay($t));
+  }
+}
+
+class DateGetDay extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", WeekDay(EcmaLocalTime($t)));
   }
 }
 
@@ -259,4 +279,12 @@ function DateFromTime($t){
             $d += $mdays;
         }
         return $d + 1;
+}
+
+function WeekDay(int $t) : int{
+   $result = Day($t) + 4;
+   $result = $result % 7;
+   if($result < 0)
+     $result += 7;
+    return $result;
 }
