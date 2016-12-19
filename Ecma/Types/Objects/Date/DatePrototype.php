@@ -102,38 +102,57 @@ class DateToString extends HeadObject implements Call{
   }
 }
 
-function MonthFromTime(int $t) : int{
-  $i = DayWithinYear($t);
-  $o = InLeapYear($t);
-  if($i > 0 && $i < 31)
-    return 0;
-  if($i > 31 && $i < 59+$o)
-    return 1;
-  if($i > 59+$o && $i < 90+$o)
-    return 2;
-  if($i > 90+$o && $i < 120+$o)
-    return 3;
-  if($i > 120+$o && $i < 151+$o)
-    return 4;
-}
-                     
+//wee has looked in this file: https://github.com/mozilla/rhino/blob/master/src/org/mozilla/javascript/NativeDate.java to get it work
+
+define("HalfTimeDomain", 8.64e15);
+define("HoursPerDay", 24.0);
+define("MinutesPerHour", 60.0);
+define("SecondsPerMinute", 60.0);
+define("msPerSecond", 1000.0);
+define("MinutesPerDay", (HoursPerDay * MinutesPerHour));
+define("SecondsPerDay", (MinutesPerDay * SecondsPerMinute));
+define("SecondsPerHour", (MinutesPerHour * SecondsPerMinute));
+define("msPerDay", (SecondsPerDay * msPerSecond));
+define("msPerHour", (SecondsPerHour * msPerSecond));
+define("msPerMinute", (SecondsPerMinute * msPerSecond));
+
 function DayFromYear(int $y) : int{
-    return 365 * ($y-1970) + floor(($y-1969)/4) - floor(($y-1901)/100) + floor(($y-1601)/400);
+    return ((365 * (($y)-1970) + floor((($y)-1969)/4.0) - floor((($y)-1901)/100.0) + floor((($y)-1601)/400.0)));
 }
                      
-function TimeFromYear(int $y){
-    return 86400000*DayFromYear($y);
-}
-                     
-function YearFromTime(int $y) : float{
-    return TimeFromYear($y);
+function TimeFromYear(int $y) : int{
+    return msPerDay*DayFromYear($y);
 }
 
+function DaysInYear(int $y) : int{
+  return IsLeapYear((int)$y) ? 366.0 : 365.0;
+}
+
+function IsLeapYear(int $y) : bool{
+  return $y % 4 == 0 && ($y % 100 != 0 || $y % 400 == 0);
+}
+
+function YearFromTime(int $t) : float{
+    if(is_infinite($t) || is_nan($t)){
+      return 0;
+    }
+
+    $y = floor($t / (msPerDay * 365.2425)) + 1970;
+    $t2 = TimeFromYear($y);
+    if($t < $t2)
+      $y--;
+    elseif ($t2 + msPerDay * DaysInYear($y) <= $t)
+      $y++;
+
+    return $y;
+}
 function EcmaLocalTime(int $t) : int{
-    $localtza = 0;
-    return $t + $localtza + DaylightSavingTA($t);
+    $localtza = new DateTime();
+    return $t + $localtza->getOffset() + DaylightSavingTA($t);
 }
-
 function DaylightSavingTA($t){
-  return 0;
+    return 0;
+}
+function EcmaTime(){
+  return time()*1000;
 }
