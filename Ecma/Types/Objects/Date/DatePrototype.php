@@ -35,6 +35,27 @@ class DatePrototype extends HeadObject{
     $this->Put("getUTCSeconds",      new Property(new Value($ecma, "Object", new DateGetUTCSeconds())));
     $this->Put("getMilliseconds",    new Property(new Value($ecma, "Object", new DateGetMilliseconds())));
     $this->Put("getUTCMilliseconds", new Property(new Value($ecma, "Object", new DateGetUTCMilliseconds())));
+    $this->Put("getTimezoneOffset",  new Property(new Value($ecma, "Object", new DateGetTimezoneOffset())));
+    $this->Put("setTime",            new Property(new Value($ecma, "Object", new DateSetTime())));
+  }
+}
+
+class DateSetTime extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $o = $obj->ToObject();
+    if(!($o instanceof DateInstance))
+      throw new RuntimeException("Date.setTime should be method of Date instance");
+    $o->Value = TimeClip($arg[0]->ToNumber());
+    return $o->Value;
+  }
+}
+
+class DateGetTimezoneOffset extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", ($t - EcmaLocalTime($t)) / msPerMinute);
   }
 }
 
