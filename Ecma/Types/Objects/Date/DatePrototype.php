@@ -14,25 +14,45 @@ class DatePrototype extends HeadObject{
   
   public function __construct(Ecma $ecma, DateConstructor $constructor){
     $this->ecma = $ecma;
-    $this->Put("constructor",    new Property(new Value($ecma, "Object", $constructor)));
-    $this->Put("toString",       new Property(new Value($ecma, "Object", new DateToString())));
-    $this->Put("valueOf",        new Property(new Value($ecma, "Object", new DateValueOf())));
-    $this->Put("getTime",        new Property(new Value($ecma, "Object", new DateGetTime())));
-    $this->Put("getYear",        new Property(new Value($ecma, "Object", new DateGetYear())));
-    $this->Put("getFullYear",    new Property(new Value($ecma, "Object", new DateGetFullYear())));
-    $this->Put("getUTCFullYear", new Property(new Value($ecma, "Object", new DateGetUTCFullYear())));
-    $this->Put("getMonth",       new Property(new Value($ecma, "Object", new DateGetMonth())));
-    $this->Put("getUTCMonth",    new Property(new Value($ecma, "Object", new DateGetUTCMonth())));
-    $this->Put("getDate",        new Property(new Value($ecma, "Object", new DateGetDate())));
-    $this->Put("getUTCDate",     new Property(new Value($ecma, "Object", new DateGetUTCDate())));
-    $this->Put("getDay",         new Property(new Value($ecma, "Object", new DateGetDay())));
-    $this->Put("getUTCDay",      new Property(new Value($ecma, "Object", new DateGetUTCDay())));
-    $this->Put("getHours",       new Property(new Value($ecma, "Object", new DateGetHours())));
-    $this->Put("getUTCHours",    new Property(new Value($ecma, "Object", new DateGetUTCHours())));
-    $this->Put("getMinutes",     new Property(new Value($ecma, "Object", new DateGetMinutes())));
-    $this->Put("getUTCMinutes",  new Property(new Value($ecma, "Object", new DateGetUTCMinutes())));
-    $this->put("getSeconds",     new Property(new Value($ecma, "Object", new DateGetSeconds())));
-    $this->Put("getUTCSeconds",  new Property(new Value($ecma, "Object", new DateGetUTCSeconds())));
+    $this->Put("constructor",        new Property(new Value($ecma, "Object", $constructor)));
+    $this->Put("toString",           new Property(new Value($ecma, "Object", new DateToString())));
+    $this->Put("valueOf",            new Property(new Value($ecma, "Object", new DateValueOf())));
+    $this->Put("getTime",            new Property(new Value($ecma, "Object", new DateGetTime())));
+    $this->Put("getYear",            new Property(new Value($ecma, "Object", new DateGetYear())));
+    $this->Put("getFullYear",        new Property(new Value($ecma, "Object", new DateGetFullYear())));
+    $this->Put("getUTCFullYear",     new Property(new Value($ecma, "Object", new DateGetUTCFullYear())));
+    $this->Put("getMonth",           new Property(new Value($ecma, "Object", new DateGetMonth())));
+    $this->Put("getUTCMonth",        new Property(new Value($ecma, "Object", new DateGetUTCMonth())));
+    $this->Put("getDate",            new Property(new Value($ecma, "Object", new DateGetDate())));
+    $this->Put("getUTCDate",         new Property(new Value($ecma, "Object", new DateGetUTCDate())));
+    $this->Put("getDay",             new Property(new Value($ecma, "Object", new DateGetDay())));
+    $this->Put("getUTCDay",          new Property(new Value($ecma, "Object", new DateGetUTCDay())));
+    $this->Put("getHours",           new Property(new Value($ecma, "Object", new DateGetHours())));
+    $this->Put("getUTCHours",        new Property(new Value($ecma, "Object", new DateGetUTCHours())));
+    $this->Put("getMinutes",         new Property(new Value($ecma, "Object", new DateGetMinutes())));
+    $this->Put("getUTCMinutes",      new Property(new Value($ecma, "Object", new DateGetUTCMinutes())));
+    $this->put("getSeconds",         new Property(new Value($ecma, "Object", new DateGetSeconds())));
+    $this->Put("getUTCSeconds",      new Property(new Value($ecma, "Object", new DateGetUTCSeconds())));
+    $this->Put("getMilliseconds",    new Property(new Value($ecma, "Object", new DateGetMilliseconds())));
+    $this->Put("getUTCMilliseconds", new Property(new Value($ecma, "Object", new DateGetUTCMilliseconds())));
+  }
+}
+
+class DateGetUTCMilliseconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", msFromTime($t));
+  }
+}
+
+class DateGetMilliseconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    if(is_nan($t))
+      return new Value($obj->ecma, "Number", $t);
+    return new Value($obj->ecma, "Number", msFromTime(EcmaLocalTime($t)));
   }
 }
 
@@ -360,4 +380,8 @@ function MinFromTime(int $t) : int{
 
 function SecFromTime(int $t) : int{
   return floor($t / msPerSecond) % SecondsPerMinute;
+}
+
+function msFromTime(int $t) : int{
+  return $t % msPerSecond;
 }
