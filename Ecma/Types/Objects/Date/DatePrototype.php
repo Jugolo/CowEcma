@@ -406,3 +406,13 @@ function SecFromTime(int $t) : int{
 function msFromTime(int $t) : int{
   return $t % msPerSecond;
 }
+
+function TimeClip(float $time){
+  if(!is_finite($time))
+    return acos(8);
+  
+  if($time > 8.64e15)
+    return acos(8);
+  
+  return $time;
+}
