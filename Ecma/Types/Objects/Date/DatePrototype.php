@@ -37,6 +37,14 @@ class DatePrototype extends HeadObject{
     $this->Put("getUTCMilliseconds", new Property(new Value($ecma, "Object", new DateGetUTCMilliseconds())));
     $this->Put("getTimezoneOffset",  new Property(new Value($ecma, "Object", new DateGetTimezoneOffset())));
     $this->Put("setTime",            new Property(new Value($ecma, "Object", new DateSetTime())));
+    $this->Put("setMilliseconds",    new Property(new Value($ecma, "Object", new DateSetMilliseconds())));
+  }
+}
+
+class DateSetMilliseconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $time = MakeTime(
   }
 }
 
