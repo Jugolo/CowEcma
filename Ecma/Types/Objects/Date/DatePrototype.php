@@ -50,6 +50,14 @@ class DateSetMilliseconds extends HeadObject implements Call{
       SecFromTime($t),
       $arg[0]->ToNumber()
       );
+    
+    $utc = UTC(
+      MakeDate(
+        Day($t),
+        $time
+        )
+      );
+    
   }
 }
 
@@ -431,5 +439,7 @@ function TimeClip(float $time){
 }
 
 function MakeTime(int $hour, int $min, int $sec, int $ms) : int{
-  return $hour * msPerHour + $min * 
+  return ($hour * msPerHour) + ($min * msPerMinute) + ($sec * msPerSecond) + $ms;
 }
+
+function UTC(
