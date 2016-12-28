@@ -45,6 +45,11 @@ class DateSetMilliseconds extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
     $t = EcmaLocalTime($obj->ToObject()->Value);
     $time = MakeTime(
+      HourFromTime($t),
+      MinFromTime($t),
+      SecFromTime($t),
+      $arg[0]->ToNumber()
+      );
   }
 }
 
@@ -423,4 +428,8 @@ function TimeClip(float $time){
     return acos(8);
   
   return $time;
+}
+
+function MakeTime(int $hour, int $min, int $sec, int $ms) : int{
+  return $hour * msPerHour + $min * 
 }
