@@ -38,6 +38,37 @@ class DatePrototype extends HeadObject{
     $this->Put("getTimezoneOffset",  new Property(new Value($ecma, "Object", new DateGetTimezoneOffset())));
     $this->Put("setTime",            new Property(new Value($ecma, "Object", new DateSetTime())));
     $this->Put("setMilliseconds",    new Property(new Value($ecma, "Object", new DateSetMilliseconds())));
+    $this->Put("setUTCMilliseconds", new Property(new Value($ecma, "Object", new DateSetUTCMilliseconds())));
+    $this->Put("setSeconds",         new Property(new Value($ecma, "Object", new DateSetSeconds())));
+  }
+}
+
+class DateSetSeconds extends HeadObject implements Call{
+ public function Call(Value $obj, array $arg) : Value{
+   $t = EcmaLocalTime($obj->ToObject()->Value);
+   $sec = $arg[0]->ToNumber();
+   $ms = count($arg) >= 2 ? $arg[1]->ToNumber() : msFromTime($t);
+ }
+}
+
+class DateSetUTCMilliseconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $ms = $arg[0]->ToNumber();
+    $t = $obj->ToObject()->Value;
+    $time = MakeTime(
+      HourFromTime($t),
+      MinFromTime($t),
+      SecFromTime($t),
+      $ms
+      );
+    $obj->ToObject()->Value = TimeClip(
+      MakeDate(
+        Day($t),
+        $time
+        )
+      );
+    
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
@@ -57,7 +88,9 @@ class DateSetMilliseconds extends HeadObject implements Call{
         $time
         )
       );
-    
+    $o = $obj->ToObject();
+    $o->Value = TimeClip($utc);
+    return new Value($obj->ecma, "Number", $o->Value);
   }
 }
 
@@ -67,7 +100,7 @@ class DateSetTime extends HeadObject implements Call{
     if(!($o instanceof DateInstance))
       throw new RuntimeException("Date.setTime should be method of Date instance");
     $o->Value = TimeClip($arg[0]->ToNumber());
-    return $o->Value;
+    return new Value($obj->ecma, "Number", $o->Value);
   }
 }
 
@@ -442,4 +475,14 @@ function MakeTime(int $hour, int $min, int $sec, int $ms) : int{
   return ($hour * msPerHour) + ($min * msPerMinute) + ($sec * msPerSecond) + $ms;
 }
 
-function UTC(
+function MakeDate($day, $time){
+  if(!is_finite($day))
+    return NAN;
+  
+  return $day * msPerDay + $time;
+}
+
+function UTC($t){
+  $localtza = new DateTime();
+  return $t - $localtza->getOffset() - DaylightSavingTA($t - $localtza->getOffset());
+}
