@@ -40,6 +40,52 @@ class DatePrototype extends HeadObject{
     $this->Put("setMilliseconds",    new Property(new Value($ecma, "Object", new DateSetMilliseconds())));
     $this->Put("setUTCMilliseconds", new Property(new Value($ecma, "Object", new DateSetUTCMilliseconds())));
     $this->Put("setSeconds",         new Property(new Value($ecma, "Object", new DateSetSeconds())));
+    $this->Put("setUTCSeconds",      new Property(new Value($ecma, "Object", new DateSetUTCSeconds())));
+    $this->Put("setMinutes",         new Property(new Value($ecma, "Object", new DateSetMinutes())));
+    $this->Put("
+  }
+}
+
+class DateSetMinutes extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $min = $arg[0]->ToNumber();
+    $sec = count($arg) >= 2 ? $arg[1]->ToNumber() : SecFromTime($t);
+    $ms  = count($arg) >= 3 ? $arg[2]->ToNumber() : msFromTime($t);
+    $obj->ToObject()->Value = TimeClip(
+      UTC(
+        MakeDate(
+          Day($t),
+          MakeTime(
+            HourFromTime($t),
+            $min,
+            $sec,
+            $ms
+            )
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
+  }
+}
+
+class DateSetUTCSeconds extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = $obj->ToObject()->Value;
+    $sec = $arg[0]->ToNumber();
+    $ms = count($arg) >= 2 ? $arg[1]->ToNumber() : msFromTime($t);
+    $obj->ToObject()->Value = TimeClib(
+        MakeDate(
+          Day($t),
+          MakeTime(
+            HourFromTime($t),
+            MinFromTime($t),
+            $sec,
+            $ms
+            )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
@@ -48,6 +94,20 @@ class DateSetSeconds extends HeadObject implements Call{
    $t = EcmaLocalTime($obj->ToObject()->Value);
    $sec = $arg[0]->ToNumber();
    $ms = count($arg) >= 2 ? $arg[1]->ToNumber() : msFromTime($t);
+   $obj->ToObject()->Value = TimeClib(
+     UTC(
+       MakeDate(
+         Day($t),
+         MakeTime(
+           HourFromTime($t),
+           MinFromTime($t),
+           $sec,
+           $ms
+           )
+         )
+       )
+     );
+   return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
  }
 }
 
