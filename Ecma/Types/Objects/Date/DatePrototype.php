@@ -637,9 +637,16 @@ function MakeDay(int $year, int $month, int $date){
     return NAN;
   }
   
-  $first = $year - floor($month/12);
-  $second = $month % 12;
-  
+  $year += floor($month / 12);
+  $month = $month % 12;
+        
+  if($month < 0)
+    $month += 12;
+
+   $yearday = floor(TimeFromYear($year) / msPerDay);
+   $monthday = DayFromMonth($month, $year);
+
+   return $yearday + $monthday + $date - 1;
 }
 
 function UTC($t){
