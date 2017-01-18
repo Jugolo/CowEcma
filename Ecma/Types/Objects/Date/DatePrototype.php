@@ -43,6 +43,75 @@ class DatePrototype extends HeadObject{
     $this->Put("setUTCSeconds",      new Property(new Value($ecma, "Object", new DateSetUTCSeconds())));
     $this->Put("setMinutes",         new Property(new Value($ecma, "Object", new DateSetMinutes())));
     $this->Put("setUTCMinutes",      new Property(new Value($ecma, "Object", new DateSetUTCMinutes())));
+    $this->Put("setHours",           new Property(new Value($ecma, "Object", new DateSetHours())));
+    $this->Put("setUTCHours",        new Property(new Value($ecma, "Object", new DateSetUTCHours())));
+    $this->Put("setDate",            new Property(new Value($ecma, "Object", new DateSetDate())));
+  }
+}
+
+class DateSetDate extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $day = MakeDay(
+      YearFromTime($t),
+      MonthFromTime($t),
+      $arg[0]->ToNumber()
+      );
+    $obj->ToObject()->Value = TimeClip(
+      UTC(
+        MakeDate(
+          $day,
+          TimeWithinDay($t)
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
+  }
+}
+
+class DateSetUTCHours extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $hour = $arg[0]->ToNumber();
+    $min = count($arg) >= 2 ? $arg[1]->ToNumber() : MinFromTime($t);
+    $sec = count($arg) >= 3 ? $arg[2]->ToNumber() : SecFromTime($t);
+    $ms = count($arg) >= 4 ? $arg[3]->ToNumber() : msFromTime($t);
+    $obj->ToObject()->Value = TimeClip(
+      MakeDate(
+        Day($t),
+        MakeTime(
+          $hour,
+          $min,
+          $sec,
+          $ms
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
+  }
+}
+
+class DateSetHours extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $hour = $arg[0]->ToNumber();
+    $min = count($arg) >= 2 ? $arg[1]->ToNumber() : MinFromTime($t);
+    $sec = count($arg) >= 3 ? $arg[2]->ToNumber() : SecFromTime($t);
+    $ms = count($arg) >= 4 ? $arg[3]->ToNumber() : msFromTime($t);
+    $obj->ToObject()->Value = TimeClip(
+      UTC(
+        MakeDate(
+          Day($t),
+          MakeTime(
+            $hour,
+            $min,
+            $sec,
+            $ms
+            )
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
@@ -561,6 +630,16 @@ function MakeDate($day, $time){
     return NAN;
   
   return $day * msPerDay + $time;
+}
+
+function MakeDay(int $year, int $month, int $date){
+  if(!is_finite($year) || !is_finite($month) || !is_finite($date)){
+    return NAN;
+  }
+  
+  $first = $year - floor($month/12);
+  $second = $month % 12;
+  
 }
 
 function UTC($t){
