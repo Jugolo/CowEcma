@@ -42,7 +42,28 @@ class DatePrototype extends HeadObject{
     $this->Put("setSeconds",         new Property(new Value($ecma, "Object", new DateSetSeconds())));
     $this->Put("setUTCSeconds",      new Property(new Value($ecma, "Object", new DateSetUTCSeconds())));
     $this->Put("setMinutes",         new Property(new Value($ecma, "Object", new DateSetMinutes())));
-    $this->Put("
+    $this->Put("setUTCMinutes",      new Property(new Value($ecma, "Object", new DateSetUTCMinutes())));
+  }
+}
+
+class DateSetUTCMinutes extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $min = $arg[0]->ToNumber();
+    $sec = count($arg) >= 2 ? $arg[1]->ToNumbet() : SecFromTime($t);
+    $ms = count($arg) >= 3 ? $arg[2]->ToNumber() : msFromTime($t);
+    $obj->ToObject()->Value = TimeClip(
+      MakeDate(
+        Day($t),
+        MakeTime(
+          HourFromTime($t),
+          $min,
+          $sec,
+          $ms
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
