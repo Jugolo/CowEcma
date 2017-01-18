@@ -46,6 +46,32 @@ class DatePrototype extends HeadObject{
     $this->Put("setHours",           new Property(new Value($ecma, "Object", new DateSetHours())));
     $this->Put("setUTCHours",        new Property(new Value($ecma, "Object", new DateSetUTCHours())));
     $this->Put("setDate",            new Property(new Value($ecma, "Object", new DateSetDate())));
+    $this->Put("setUTCDate",         new Property(new Value($ecma, "Object", new DateSetUTCDate())));
+    $this->Put("setMonth",           new Property(new Value($ecma, "Object", new DateSetMonth())));
+  }
+}
+
+class DateSetMonth extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg){
+    
+  }
+}
+
+class DateSetUTCDate extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $day = MakeDay(
+      YearFromTime($t),
+      MonthFromTime($t),
+      $arg[0]->ToNumber()
+      );
+    $obj->ToObject()->Value = TimeClip(
+      MakeDate(
+        $day,
+        TimeWithinDay($t)
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
@@ -479,6 +505,10 @@ function DayFromYear(int $y) : int{
                      
 function TimeFromYear(int $y) : int{
     return msPerDay*DayFromYear($y);
+}
+
+function TimeWithinDay(int $t) : int{
+  return $t / msPerDay;
 }
 
 function DaysInYear(int $y) : int{
