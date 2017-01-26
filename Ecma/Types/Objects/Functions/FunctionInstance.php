@@ -49,6 +49,10 @@ class FunctionInstance extends HeadObject implements Constructor, Call{
        $agument->Put($i, new Property($args[$i]));
        $activation->Put($this->args[$i], new Property($args[$i]));
      }
+    
+     for(;$i<count($this->args);$i++){
+       $activation->Put($this->args[$i], new Property(new Value($obj->ecma, "Undefined", null)))
+     }
 
      $this->ecma->enterScope(new ExcuteContext($activation, $activation, $obj->ToObject()));
      $return = $this->ecma->parse($this->body);
