@@ -48,12 +48,54 @@ class DatePrototype extends HeadObject{
     $this->Put("setDate",            new Property(new Value($ecma, "Object", new DateSetDate())));
     $this->Put("setUTCDate",         new Property(new Value($ecma, "Object", new DateSetUTCDate())));
     $this->Put("setMonth",           new Property(new Value($ecma, "Object", new DateSetMonth())));
+    $this->Put("setUTCMonth",        new Property(new Value($ecma, "Object", new DateSetUTCMonth())));
+    $this->Put("setFullYear",        new Property(new Value($ecma, "Object", new DateSetFullYear())));
+  }
+}
+
+class DateSetFullYear extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    
+  }
+}
+
+class DateSetUTCMonth extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $mon = $arg[0]->ToNumber();
+    $date = count($arg) >= 2 ? $arg[1]->ToNumber() : DateFromTime($t);
+    $obj->ToObject()->Value = TimeClib(
+      MakeDate(
+        MakeDay(
+          YearFromTime($t),
+          $mon,
+          $date
+          ),
+        TimeWithinDay($t)
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
 class DateSetMonth extends HeadObject implements Call{
-  public function Call(Value $obj, array $arg){
-    
+  public function Call(Value $obj, array $arg) : Value{
+    $t = EcmaLocalTime($obj->ToObject()->Value);
+    $mon = $arg[0]->ToNumber();
+    $date = count($arg) >= 2 ? $arg[1]->ToNumber() : DateFromTime($t);
+    $obj->ToObject()->Value = TimeClip(
+      UTC(
+        MakeDate(
+          MakeDay(
+            YearFromTime($t),
+            $mon,
+            $date
+            ),
+          TimeWithinDay($t)
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
