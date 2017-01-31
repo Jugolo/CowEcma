@@ -53,6 +53,14 @@ class DatePrototype extends HeadObject{
     $this->Put("setUTCFullYear",     new Property(new Value($ecma, "Object", new DateSetUTCFullYear())));
     $this->Put("setYear",            new Property(new Value($ecma, "Object", new DateSetYear())));
     $this->Put("toLocaleString",     new Property(new Value($ecma, "Object", new DateToLocaleString())));
+    $this->Put("toUTCString",        new Property(new Value($ecma, "Object", new DateToLocaleString())));
+    $this->Put("toGMTString",        new Property(new Value($ecma, "Object", new DateToLocaleString())));
+  }
+}
+
+class DateToLocaleString extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    return $obj->ToObject()->Get("toString")->GetValue()->Call($obj, $value);
   }
 }
 
