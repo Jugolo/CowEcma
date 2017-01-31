@@ -15,7 +15,7 @@ class DateConstructor extends HeadObject implements Construtor, Call{
   public function __construct(Ecma $ecma){
     $this->Prototype = $ecma->_function;
     $this->Put("prototype", new Property(new Value($ecma, "Object", new DatePrototype($ecma, $this)), ["DontEnum", "DontDelete", "ReadOnly"]));
-    
+    $this->Put("parse",     new Property(new Value($ecma, "Object", new DateParse($this))));
   }
   
   public function Construct(array $arg) : Value{
@@ -28,7 +28,13 @@ class DateConstructor extends HeadObject implements Construtor, Call{
 }
 
 class DateParse extends HeadObject implements Call{
+  private $date;
+  
+  public function __construct(DateConstructor $date){
+    $this->date = $date;
+  }
+  
   public function Call(Value $obj, array $arg) : Value{
-    $
+    return $this->date->Construct([new Value($obj->ecma, "Number", strtotime($arg[0]->ToString())*1000)]);
   }
 }
