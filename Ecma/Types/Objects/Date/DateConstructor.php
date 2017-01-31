@@ -2,10 +2,12 @@
 namespace Ecma\Types\Objects\Date\DateConstructor;
 
 use Ecma\Ecma\Ecma;
+use Ecma\Types\Value\Value;
 use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\Constructor\Constructor;
 use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Objects\Date\DatePrototype\DatePrototype;
+use Ecma\Types\Objects\HeadObject\HeadObject;
 
 class DateConstructor extends HeadObject implements Construtor, Call{
   protected $ecma;
@@ -22,5 +24,11 @@ class DateConstructor extends HeadObject implements Construtor, Call{
   
   public function Call(Value $obj, array $arg){
     return new Value($obj->ecma, "String", $this->Construct([])->ToString());
+  }
+}
+
+class DateParse extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $
   }
 }
