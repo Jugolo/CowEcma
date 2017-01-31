@@ -59,7 +59,28 @@ class DateSetYear extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
     $value = $obj->ToObject()->Value;
     $t = is_nan($value) ? 0 : $value;
+    $year = $arg[0]->ToNumber();
+    if(is_nan($year)){
+      $obj->ToObject()->Value = $year;
+      return $arg[0];
+    }
     
+    if($year > 0 && $year <= 99){
+      
+    }
+    
+    return new Value(
+      $obj->ecma,
+      "Number",
+      $obj->ToObject()->Value = TimeClip(
+        UTC(
+          MakeDate(
+            
+            TimeWithinDay($t)
+            )
+          )
+        )
+      );
   }
 }
 
