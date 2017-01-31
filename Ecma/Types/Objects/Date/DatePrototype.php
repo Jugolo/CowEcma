@@ -52,6 +52,7 @@ class DatePrototype extends HeadObject{
     $this->Put("setFullYear",        new Property(new Value($ecma, "Object", new DateSetFullYear())));
     $this->Put("setUTCFullYear",     new Property(new Value($ecma, "Object", new DateSetUTCFullYear())));
     $this->Put("setYear",            new Property(new Value($ecma, "Object", new DateSetYear())));
+    $this->Put("toLocaleString",     new Property(new Value($ecma, "Object", new DateToLocaleString())));
   }
 }
 
@@ -66,7 +67,7 @@ class DateSetYear extends HeadObject implements Call{
     }
     
     if($year > 0 && $year <= 99){
-      
+      $year += 1900;
     }
     
     return new Value(
@@ -75,7 +76,11 @@ class DateSetYear extends HeadObject implements Call{
       $obj->ToObject()->Value = TimeClip(
         UTC(
           MakeDate(
-            
+            MakeDay(
+              $year,
+              MonthFromTime($t),
+              DateFromTime($t)
+              ),
             TimeWithinDay($t)
             )
           )
