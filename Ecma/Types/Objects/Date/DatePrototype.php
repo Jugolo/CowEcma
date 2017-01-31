@@ -50,12 +50,60 @@ class DatePrototype extends HeadObject{
     $this->Put("setMonth",           new Property(new Value($ecma, "Object", new DateSetMonth())));
     $this->Put("setUTCMonth",        new Property(new Value($ecma, "Object", new DateSetUTCMonth())));
     $this->Put("setFullYear",        new Property(new Value($ecma, "Object", new DateSetFullYear())));
+    $this->Put("setUTCFullYear",     new Property(new Value($ecma, "Object", new DateSetUTCFullYear())));
+    $this->Put("setYear",            new Property(new Value($ecma, "Object", new DateSetYear())));
+  }
+}
+
+class DateSetYear extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    $t = is_nan($value) ? 0 : $value;
+    
+  }
+}
+
+class DateSetUtcFullYear extends HeadObject implements Call{
+  public function Call(Value $obj, array $arg) : Value{
+    $value = $obj->ToObject()->Value;
+    $t = is_nan($value) ? 0 : EcmaLocalTime($value);
+    return new Value(
+      $obj->ecma,
+      "Number",
+      $obj->ToObject()->Value = TimeClip(
+        MakeDate(
+          MakeDay(
+            $arg[0]->ToNumber(),
+            count($arg) >= 2 ? $arg[1]->ToNumber() : MonthFromTime($t),
+            count($arg) >= 3 ? $arg[2]->ToNumber() : DateFromTime($t)
+            )
+          TimeWithinDay($t)
+          )
+        )
+      );
   }
 }
 
 class DateSetFullYear extends HeadObject implements Call{
   public function Call(Value $obj, array $arg) : Value{
-    
+    $value = $obj->ToObject()->ToNumber();
+    $t = is_nan($value) ? 0 : EcmaLocalTime($value);
+    $year = $arg[0]->ToNumber();
+    $month = count($arg) >= 2 ? $arg[1]->ToNumber() : MonthFromTime($t);
+    $date = count($arg) >= 3 ? $arg[2]->ToNumber() : DateFromTime($t);
+    $obj->ToObject()->Value = TimeClip(
+      UTC(
+        MakeDate(
+          MakeDay(
+            $year,
+            $month,
+            $date
+            ),
+          TimeWithinDay($t)
+          )
+        )
+      );
+    return new Value($obj->ecma, "Number", $obj->ToObject()->Value);
   }
 }
 
