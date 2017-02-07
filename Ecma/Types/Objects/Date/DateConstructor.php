@@ -23,7 +23,7 @@ use function Ecma\Types\Objects\Date\DatePrototype\MakeDate;
 use function Ecma\Types\Objects\Date\DatePrototype\MakeTime;
 use function Ecma\Types\Objects\Date\DatePrototype\UTC;
 
-class DateConstructor extends HeadObject implements Construtor, Call{
+class DateConstructor extends HeadObject implements Constructor, Call{
   protected $ecma;
   
   public function __construct(Ecma $ecma){
