@@ -16,7 +16,7 @@ class Objects extends HeadObject implements Constructor, Call{
     $prototype->Put("constructor", new Property(new Value($ecma, "Object", new ObjectPrototypeConstructor($this))));
     $prototype->Put("toString", new Property(new Value($ecma, "Object", new ObjectPrototypeToString())));
     $prototype->Put("valueOf", new Property(new Value($ecma, "Object", new ObjectPrototypeValueOf())));
-    $this->Put("prototype", new Property(new Value($ecma, "Object", $prototype)));
+    $this->Put("prototype", new Property(new Value($ecma, "Object", $prototype), ["DontEnum", "DontDelete", "ReadOnly"]));
   }
 
   public function Construct(array $arg) : Value{
