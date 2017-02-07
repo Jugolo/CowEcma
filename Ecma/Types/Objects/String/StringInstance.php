@@ -13,6 +13,7 @@ class StringInstance extends HeadObject{
     $this->Prototype = $ecma->str;
     $this->Value = $str;
     $this->Class = "String";
+    $this->Put("length", new Property(new Value($ecma, "Number", strlen($str)), ["DontEnum", "DontDelete", "ReadOnly"]));
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->str)));
   }
 }
