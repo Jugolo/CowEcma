@@ -16,6 +16,7 @@ class ArrayConstructor extends HeadObject implements Call, Constructor{
   public function __construct(Ecma $ecma){
     $ecma->_array = new ArrayPrototype($this, $ecma);
     $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->_array), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("length", new Property(new Value($ecma, "Number", 1)));
     $this->ecma = $ecma;
   }
   public function Call(Value $obj, array $args) : Value{
