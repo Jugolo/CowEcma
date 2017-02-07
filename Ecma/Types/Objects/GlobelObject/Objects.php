@@ -31,6 +31,11 @@ class Objects extends HeadObject implements Constructor, Call{
   }
 
   public function Call(Value $obj, array $arg) : Value{
+    if(count($arg) != 0){
+      if(!$arg[0]->isNull() && !$arg[0]->isUndefined()){
+        return new Value($this->ecma, "Object", $arg[0]->ToObject());
+      }
+    }
     return new Value($this->ecma, "Object", $this->Construct($arg));
   }
 }
