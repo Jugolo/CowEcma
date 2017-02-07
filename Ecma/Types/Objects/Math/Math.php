@@ -12,30 +12,33 @@ class Math extends HeadObject{
   
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
-    $this->Put("E",      new Property(new Value($ecma, "Number", M_E), ["DontEnum", "DontDelete", "ReadOnly"]));
-    $this->Put("LN10",   new Property(new Value($ecma, "Number", M_LN10), ["DontEnum", "DontDelete", "ReadOnly"]));
-    $this->Put("LN2",    new Property(new Value($ecma, "Number", M_LN2), ["DontEnum", "DontDelete", "ReadOnly"]));
-    $this->Put("LOG2E",  new Property(new Value($ecma, "Number", M_LOG2E), ["DontEnum", "DontDelete", "ReadOnly"]));
-    $this->Put("LOG10E", new Property(new Value($ecma, "Number", M_LOG10E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("E",       new Property(new Value($ecma, "Number", M_E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LN10",    new Property(new Value($ecma, "Number", M_LN10), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LN2",     new Property(new Value($ecma, "Number", M_LN2), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LOG2E",   new Property(new Value($ecma, "Number", M_LOG2E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LOG10E",  new Property(new Value($ecma, "Number", M_LOG10E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("PI",      new Property(new Value($ecma, "Number", M_PI), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("SQRT1_2", new Property(new Value($ecma, "Number", M_SQRT1_2), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("SQRT2",   new Property(new Value($ecma, "Number", M_SQRT2), ["DontEnum", "DontDelete", "ReadOnly"]));
     
-    $this->Put("abs",    new Property(new Value($ecma, "Object", new MathAbs())));
-    $this->Put("acos",   new Property(new Value($ecma, "Object", new MathAcos())));
-    $this->Put("asin",   new Property(new Value($ecma, "Object", new MathAsin())));
-    $this->Put("atan",   new Property(new Value($ecma, "Object", new MathAtan())));
-    $this->Put("atan2",  new Property(new Value($ecma, "Object", new MathAtan2())));
-    $this->Put("ceil",   new Property(new Value($ecma, "Object", new MathCeil())));
-    $this->Put("cos",    new Property(new Value($ecma, "Object", new MathCos())));
-    $this->Put("exp",    new Property(new Value($ecma, "Object", new MathExp())));
-    $this->Put("floor",  new Property(new Value($ecma, "Object", new MathFloor())));
-    $this->Put("log",    new Property(new Value($ecma, "Object", new MathLog())));
-    $this->Put("max",    new Property(new Value($ecma, "Object", new MathMax())));
-    $this->Put("min",    new Property(new Value($ecma, "Object", new MathMin())));
-    $this->Put("pow",    new Property(new Value($ecma, "Object", new MathPow())));
-    $this->Put("random", new Property(new Value($ecma, "Object", new MathRandom())));
-    $this->Put("round",  new Property(new Value($ecma, "Object", new MathRound())));
-    $this->Put("sin",    new Property(new Value($ecma, "Object", new MathSin())));
-    $this->Put("sqrt",   new Property(new Value($ecma, "Object", new MathSqrt())));
-    $this->Put("tan",    new Property(new Value($ecma, "Object", new MathTan())));
+    $this->Put("abs",     new Property(new Value($ecma, "Object", new MathAbs())));
+    $this->Put("acos",    new Property(new Value($ecma, "Object", new MathAcos())));
+    $this->Put("asin",    new Property(new Value($ecma, "Object", new MathAsin())));
+    $this->Put("atan",    new Property(new Value($ecma, "Object", new MathAtan())));
+    $this->Put("atan2",   new Property(new Value($ecma, "Object", new MathAtan2())));
+    $this->Put("ceil",    new Property(new Value($ecma, "Object", new MathCeil())));
+    $this->Put("cos",     new Property(new Value($ecma, "Object", new MathCos())));
+    $this->Put("exp",     new Property(new Value($ecma, "Object", new MathExp())));
+    $this->Put("floor",   new Property(new Value($ecma, "Object", new MathFloor())));
+    $this->Put("log",     new Property(new Value($ecma, "Object", new MathLog())));
+    $this->Put("max",     new Property(new Value($ecma, "Object", new MathMax())));
+    $this->Put("min",     new Property(new Value($ecma, "Object", new MathMin())));
+    $this->Put("pow",     new Property(new Value($ecma, "Object", new MathPow())));
+    $this->Put("random",  new Property(new Value($ecma, "Object", new MathRandom())));
+    $this->Put("round",   new Property(new Value($ecma, "Object", new MathRound())));
+    $this->Put("sin",     new Property(new Value($ecma, "Object", new MathSin())));
+    $this->Put("sqrt",    new Property(new Value($ecma, "Object", new MathSqrt())));
+    $this->Put("tan",     new Property(new Value($ecma, "Object", new MathTan())));
   }
 }
 
