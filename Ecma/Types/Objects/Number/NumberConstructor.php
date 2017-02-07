@@ -16,12 +16,12 @@ class NumberConstructor extends HeadObject implements Call, Constructor{
     $ecma->number = new NumberPrototype($ecma, $this);
     $this->ecma = $ecma;
     
-    $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->number)));
-    $this->Put("MAX_VALUE", new Property(new Value($ecma, "Number", PHP_INT_MAX)));
-    $this->Put("MIN_VALUE", new Property(new Value($ecma, "Number", PHP_INT_MIN)));
-    $this->Put("NaN", new Property(new Value($ecma, "Number", acos(8))));
-    $this->Put("NEGATIVE_INFINITY", new Property(new Value($ecma, "Number", -INF)));
-    $this->Put("POSITIVE_INFINITY", new Property(new Value($ecma, "Number", INF)));
+    $this->Put("prototype", new Property(new Value($ecma, "Object", $ecma->number), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("MAX_VALUE", new Property(new Value($ecma, "Number", PHP_INT_MAX), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("MIN_VALUE", new Property(new Value($ecma, "Number", PHP_INT_MIN), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("NaN", new Property(new Value($ecma, "Number", acos(8)), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("NEGATIVE_INFINITY", new Property(new Value($ecma, "Number", -INF), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("POSITIVE_INFINITY", new Property(new Value($ecma, "Number", INF), ["DontEnum", "DontDelete", "ReadOnly"]));
   }
   
   public function Call(Value $value, array $arg) : Value{
