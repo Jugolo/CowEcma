@@ -19,7 +19,10 @@ class FunctionPrototype extends HeadObject{
 }
 
 class FunctionPrototypeToString extends HeadObject{
-  public function Call(Value $object, $args){
+  public function Call(Value $obj, $args){
+    if($obj->ToObject()->Class == "Function"){
+      throw new \RuntimeException("Function.prototype.toString() must be method of function object");
+    }
     return "function(){}";
   }
 }
