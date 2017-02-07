@@ -12,6 +12,12 @@ class Math extends HeadObject{
   
   public function __construct(Ecma $ecma){
     $this->ecma = $ecma;
+    $this->Put("E",      new Property(new Value($ecma, "Number", M_E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LN10",   new Property(new Value($ecma, "Number", M_LN10), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LN2",    new Property(new Value($ecma, "Number", M_LN2), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LOG2E",  new Property(new Value($ecma, "Number", M_LOG2E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    $this->Put("LOG10E", new Property(new Value($ecma, "Number", M_LOG10E), ["DontEnum", "DontDelete", "ReadOnly"]));
+    
     $this->Put("abs",    new Property(new Value($ecma, "Object", new MathAbs())));
     $this->Put("acos",   new Property(new Value($ecma, "Object", new MathAcos())));
     $this->Put("asin",   new Property(new Value($ecma, "Object", new MathAsin())));
