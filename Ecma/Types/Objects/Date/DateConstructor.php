@@ -16,6 +16,10 @@ use function Ecma\Types\Objects\Date\DatePrototype\HourFromTime;
 use function Ecma\Types\Objects\Date\DatePrototype\MinFromTime;
 use function Ecma\Types\Objects\Date\DatePrototype\SecFromTime;
 use function Ecma\Types\Objects\Date\DatePrototype\msFromTime;
+use function Ecma\Types\Objects\Date\DatePrototype\MakeDay;
+use function Ecma\Types\Objects\Date\DatePrototype\TimeClip;
+use function Ecma\Types\Objects\Date\DatePrototype\MakeDate;
+use function Ecma\Types\Objects\Date\DatePrototype\MakeTime;
 
 class DateConstructor extends HeadObject implements Construtor, Call{
   protected $ecma;
@@ -80,7 +84,57 @@ class DateUTC extends HeadObject implements Call{
       $minut  = MinFromTime($time);
       $second = SecFromTime($time);
       $ms     = msFromTime($time);
+    }elseif($size == 5){
+      $year   = $arg[0]->ToNumber();
+      $month  = $arg[1]->ToNumber();
+      $date   = $arg[2]->ToNumber();
+      $hours  = $arg[3]->ToNumber();
+      $minut  = $arg[4]->ToNumber();
+      $second = SecFromTime($time);
+      $ms     = msFromTime($time);
+    }elseif($size == 6){
+      $year   = $arg[0]->ToNumber();
+      $month  = $arg[1]->ToNumber();
+      $date   = $arg[2]->ToNumber();
+      $hours  = $arg[3]->ToNumber();
+      $minut  = $arg[4]->ToNumber();
+      $second = $arg[5]->ToNumber();
+      $ms     = msFromTime($time);
+    }else{
+      $year   = $arg[0]->ToNumber();
+      $month  = $arg[1]->ToNumber();
+      $date   = $arg[2]->ToNumber();
+      $hours  = $arg[3]->ToNumber();
+      $minut  = $arg[4]->ToNumber();
+      $second = $arg[5]->ToNumber();
+      $ms     = $arg[6]->ToNumber();
     }
+    
+    if(!is_nan($year) && 0 <= $year && $year <= 99){
+      $step8 = 1900+$year;
+    }else{
+      $step8 = $year;
+    }
+    
+    return new Value(
+      $obj->ecma,
+      "Number",
+      TimeClip(
+        MakeDate(
+          MakeDay(
+            $step8,
+            $month,
+            $date
+            ),
+          MakeTime(
+            $hours,
+            $minut,
+            $second,
+            $ms
+            )
+          )
+        )
+      );
   }
 }
 
