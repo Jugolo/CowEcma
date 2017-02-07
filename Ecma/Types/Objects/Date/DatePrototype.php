@@ -110,7 +110,7 @@ class DateSetUtcFullYear extends HeadObject implements Call{
             $arg[0]->ToNumber(),
             count($arg) >= 2 ? $arg[1]->ToNumber() : MonthFromTime($t),
             count($arg) >= 3 ? $arg[2]->ToNumber() : DateFromTime($t)
-            )
+            ),
           TimeWithinDay($t)
           )
         )
