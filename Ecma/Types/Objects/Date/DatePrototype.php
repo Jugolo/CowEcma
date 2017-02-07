@@ -1,5 +1,5 @@
 <?php
-namespace Ecma\Types\Objects\Date\DataPrototype;
+namespace Ecma\Types\Objects\Date\DatePrototype;
 
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use Ecma\Types\Objects\Call\Call;
