@@ -59,13 +59,13 @@ class DateConstructor extends HeadObject implements Constructor, Call{
       );
   }
   
-  public function Call(Value $obj, array $arg){
+  public function Call(Value $obj, array $arg) : Value{
     return new Value($obj->ecma, "String", $this->Construct([])->ToString());
   }
 }
 
 class DateUTC extends HeadObject implements Call{
-  public function Call(Value $obj, array $arg){
+  public function Call(Value $obj, array $arg) : Value{
     $size = count($arg);
     $time = EcmaTime();
     if($size == 0){
