@@ -82,6 +82,31 @@ class Value{
     if($this->isObject())
       return $this->ToPrimetiv($this->value, "Number")->ToNumber();
   }
+  
+  public function ToInteger(){
+    $number = $this->ToNumber();
+    if(is_nan($number) || $number == 0 || is_infinite($number)){
+      return 0;
+    }
+    return sign($number)*floor(abs($number));
+  }
+  
+  public function ToInt32(){
+    $number = $this->ToNumber();
+    if(is_nan($number) || $number == 0 || is_infinite($number)){
+      return 0;
+    }
+    
+    $step3 = sign($number)*floor(abs($number));
+    $step4 = $step3 % (2^32);
+      
+    return $step4 >= (2^31) ? $step4 - (2^32) : $step4;
+  }
+  
+  public function ToUint32(){
+    $number = $this->ToNumber();
+    if(is_nan($number) || $number == 0
+  }
 
   public function isString(){
     return $this->type == "String";
