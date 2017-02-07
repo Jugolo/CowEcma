@@ -7,6 +7,7 @@ use Ecma\Types\Objects\Call\Call;
 use Ecma\Types\Objects\Constructor\Constructor;
 use Ecma\Types\Objects\Property\Property;
 use Ecma\Types\Objects\Date\DatePrototype\DatePrototype;
+use Ecma\Types\Objects\Date\DateInstance\DateInstance;
 use Ecma\Types\Objects\HeadObject\HeadObject;
 use function Ecma\Types\Objects\Date\DatePrototype\EcmaTime;
 use function Ecma\Types\Objects\Date\DatePrototype\YearFromTime;
@@ -20,6 +21,7 @@ use function Ecma\Types\Objects\Date\DatePrototype\MakeDay;
 use function Ecma\Types\Objects\Date\DatePrototype\TimeClip;
 use function Ecma\Types\Objects\Date\DatePrototype\MakeDate;
 use function Ecma\Types\Objects\Date\DatePrototype\MakeTime;
+use function Ecma\Types\Objects\Date\DatePrototype\UTC;
 
 class DateConstructor extends HeadObject implements Construtor, Call{
   protected $ecma;
@@ -32,7 +34,29 @@ class DateConstructor extends HeadObject implements Construtor, Call{
   }
   
   public function Construct(array $arg) : Value{
-    
+    $size = count($arg);
+    $time = EcmaTime();
+    $year = $size >= 1 ? $arg[0]->ToNumber() : YearFromTime($time);
+    return new DateInstance(
+      $this,
+      TimeClip(
+        UTC(
+          MakeDate(
+            MakeDay(
+              !is_nan($year) && 0 <= $year && $year <= 99 ? 1900+$year : $year,
+              $size >= 2 ? $arg[1]->ToNumber() : MonthFromTime($time),
+              $size >= 3 ? $arg[2]->ToNumber() : DateFromTime($time)
+              ),
+            MakeTime(
+              $size >= 4 ? $arg[3]->ToNumber() : HourFromTime($time),
+              $size >= 5 ? $arg[4]->ToNumber() : MinFromTime($time),
+              $size >= 6 ? $arg[5]->ToNumber() : SecFromTime($time),
+              $size >= 7 ? $arg[6]->ToNumber() : msFromTime($time)
+              )
+            )
+          )
+        )
+      );
   }
   
   public function Call(Value $obj, array $arg){
